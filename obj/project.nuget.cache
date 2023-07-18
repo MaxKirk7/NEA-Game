@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "R1gmHALtCm0JxhJRoGHeEgAULhn8yh4ZruUVo6uqtZt4rAyr4ZaRphchsDPOJFLuek24EVNufNHXrMrxyltaOQ==",
+  "success": true,
+  "projectFilePath": "d:\\NEA\\NEAGame\\NEAGame.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\max_k\\.nuget\\packages\\monogame.content.builder.task\\3.8.1.303\\monogame.content.builder.task.3.8.1.303.nupkg.sha512",
+    "C:\\Users\\max_k\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.1.303\\monogame.framework.desktopgl.3.8.1.303.nupkg.sha512",
+    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.18\\microsoft.netcore.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.18\\microsoft.windowsdesktop.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.18\\microsoft.aspnetcore.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.18\\microsoft.netcore.app.host.win-x64.6.0.18.nupkg.sha512"
+  ],
+  "logs": []
+}
