@@ -8,18 +8,25 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    public const int ScreenWidth = 1920;
+    public const int ScreenHeight = 1080;
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        Window.IsBorderless = true;
+        Window.AllowUserResizing = false;
+        _graphics.PreferredBackBufferHeight = ScreenHeight;
+        _graphics.PreferredBackBufferWidth = ScreenWidth;
+        IsFixedTimeStep = true;
+        TargetElapsedTime = System.TimeSpan.FromSeconds(1.0 / 60);
     }
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-
+        Window.Title = "NEA Game";
         base.Initialize();
     }
 
@@ -34,6 +41,7 @@ public class Game1 : Game
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+        var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000F;
 
         // TODO: Add your update logic here
 
