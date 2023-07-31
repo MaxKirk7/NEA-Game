@@ -6,6 +6,10 @@ class HomeScreen : IScreen
 {
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
+        //Set backgrounds to use
+
+        //Create Buttons
+
     }
     public void Draw(SpriteBatch sp)
     {
