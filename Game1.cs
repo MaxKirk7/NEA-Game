@@ -39,7 +39,7 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        screens.setScreen(AllScreens[0], Content, _spriteBatch);
+        screens.setScreen(AllScreens[2], Content, _spriteBatch);
         // TODO: use this.Content to load your game content here
     }
 

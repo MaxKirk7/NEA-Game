@@ -80,7 +80,7 @@ namespace NEAScreen
                 if (Enter.ButtonPressed())
                 {
                     Enter.UnPress();
-                    if ((Username.GetInput().Length > 5 && Password.GetInput().Length > 8) || Username.GetInput() == "TestUser")
+                    if ((Username.GetInput().Length >= 5 && Password.GetInput().Length >= 8) || Username.GetInput() == "TestUser" && Password.GetInput() == "TestPass")
                     {
                         var result = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
                         if (SignIn.ButtonPressed())
@@ -114,6 +114,8 @@ namespace NEAScreen
                                     result = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
                                     // Save the PlayerID to skip this in the future
                                     SavedFile.Add($"PlayerID,{result}");
+                                    //add the achievment to the player
+                                    LoginScreenQuery.AddAchievment(result,"1");
                                     ScreenOver = true;
                                 }
                                 else

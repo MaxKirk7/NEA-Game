@@ -8,17 +8,17 @@ namespace _Sprites;
 class Button : TextBox
 {
     private bool IsActive = true;
+    private Color ActiveColour;
     private Color Normal;
     private Color Highlighted;
     private Rectangle rect;
-    private Texture2D colour;
+    private Texture2D ButtonBackground;
     private static List<Button> AllButtons = new List<Button>();
     private bool IsPressed = false;
-    public Button(string FontLocation, string text, ContentManager con, SpriteBatch sp, int X, int Y, Color StringColor, double scale, int width, int height, Color NormalColour, Color HighlightedColour) : base(FontLocation, text, con, sp, X, Y, StringColor, scale, width, height)
+    public Button(string FontLocation, string text, ContentManager con, SpriteBatch sp, int X, int Y, Color StringColor, double scale, int width, int height, Color NormalColour, Color HighlightedColour, string ButtonLook = "Buttons/Rounded Square Button") : base(FontLocation, text, con, sp, X, Y, StringColor, scale, width, height)
     {
         AllButtons.Add(this);
-        colour = new Texture2D(sp.GraphicsDevice,1,1);
-        colour.SetData(new[] {Normal});
+        ButtonBackground = con.Load<Texture2D>(ButtonLook);
         Normal = NormalColour;
         Highlighted = HighlightedColour;
         rect = new Rectangle(X - width / 2, Y - height / 2, width, height);
@@ -38,18 +38,19 @@ class Button : TextBox
         }    
     }
     private void UpdateAllButton(){
+        //change colour when button highlighted
         MouseState mouse = Mouse.GetState();
         if (rect.Contains(mouse.Position)){
-            colour.SetData(new[] {Highlighted});
+            ActiveColour = Highlighted;
             if (mouse.LeftButton == ButtonState.Pressed){
                 IsPressed = true;
             }
         }
-        else{colour.SetData(new[] {Normal});}
+        else{ActiveColour = Normal;}
     }
     private void DrawAllButtons()
     {
-        Sp.Draw(colour,rect,Color.White);
+        Sp.Draw(ButtonBackground,rect,ActiveColour);
         base.Draw();
     }
     public bool ButtonPressed(){
