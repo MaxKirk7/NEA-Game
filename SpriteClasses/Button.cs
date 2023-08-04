@@ -17,6 +17,9 @@ class Button : TextBox
     private bool IsPressed = false;
     public Button(string FontLocation, string text, ContentManager con, SpriteBatch sp, int X, int Y, Color StringColor, double scale, int width, int height, Color NormalColour, Color HighlightedColour, string ButtonLook = "Buttons/Rounded Square Button") : base(FontLocation, text, con, sp, X, Y, StringColor, scale, width, height)
     {
+        if (AllButtons == null){
+            AllButtons = new List<Button>();
+        }
         AllButtons.Add(this);
         ButtonBackground = con.Load<Texture2D>(ButtonLook);
         Normal = NormalColour;
@@ -64,5 +67,8 @@ class Button : TextBox
     }
     public void UnPress(){
         IsPressed = false;
+    }
+    public static void EndButtons(){
+        AllButtons.Clear();
     }
 }

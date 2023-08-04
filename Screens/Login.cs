@@ -115,7 +115,7 @@ namespace NEAScreen
                                     // Save the PlayerID to skip this in the future
                                     SavedFile.Add($"PlayerID,{result}");
                                     //add the achievment to the player
-                                    LoginScreenQuery.AddAchievment(result,"1");
+                                    LoginScreenQuery.AddAchievment(result, "1");
                                     ScreenOver = true;
                                 }
                                 else
@@ -177,6 +177,7 @@ namespace NEAScreen
                     writer.Flush();
                 }
             }
+            Button.EndButtons();
             return ScreenOver;
         }
 
