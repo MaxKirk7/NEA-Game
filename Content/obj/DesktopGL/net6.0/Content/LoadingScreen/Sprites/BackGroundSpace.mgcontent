@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp</SourceFile>
+  <SourceFile>d:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp</SourceFile>
   <SourceTime>2023-07-20T15:04:59.869549+01:00</SourceTime>
-  <DestFile>D:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sprites/BackGroundSpace.xnb</DestFile>
-  <DestTime>2023-07-20T15:06:40.5305804+01:00</DestTime>
+  <DestFile>d:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sprites/BackGroundSpace.xnb</DestFile>
+  <DestTime>2023-08-05T18:03:25.4652884+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T12:44:56+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

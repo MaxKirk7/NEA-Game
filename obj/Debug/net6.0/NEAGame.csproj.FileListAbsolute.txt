@@ -1,3 +1,5 @@
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Left Arrow.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Right Arrow.xnb
 D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Rounded Square Button.xnb
 D:\NEA\NEAGame\bin\Debug\net6.0\Content\Fonts\TitleFont.xnb
 D:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sounds\Loading.ogg
@@ -65,5 +67,3 @@ D:\NEA\NEAGame\obj\Debug\net6.0\refint\NEAGame.dll
 D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.pdb
 D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.genruntimeconfig.cache
 D:\NEA\NEAGame\obj\Debug\net6.0\ref\NEAGame.dll
-D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Left Arrow.xnb
-D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Right Arrow.xnb

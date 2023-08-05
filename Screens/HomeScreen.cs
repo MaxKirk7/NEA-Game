@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 namespace NEAScreen;
 class HomeScreen : IScreen
 {
+    private bool ScreenOver;
     //Skins need to be loaded from database
     private Sql Query = new Sql();
     private List<Skin> AvailableSkins = new List<Skin>();
@@ -34,7 +35,6 @@ class HomeScreen : IScreen
         }
         else
         {
-            SavedFile.Add("PlayerID,1");
         }
 
         //Set backgrounds to use
@@ -119,16 +119,6 @@ class HomeScreen : IScreen
     }
     public bool EndScreen()
     {
-        var LastUsedSkin = "Skin," + AvailableSkins[ActiveSkinIndex].BaseSkin;
-        SavedFile[1] = LastUsedSkin;
-        using StreamWriter writer = new StreamWriter("SavedInfo.txt"){
-            foreach (string s in SavedFile){
-                writer.Write(s + "\n");
-            }
-            writer.Flush();
-        }
-
-
         return false;
     }
 }

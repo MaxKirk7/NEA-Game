@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "neFXQTTr6AP+OoBCTYfcv4/4FXA/LJOI73vMc4QsYdvK3DFxwEOm40PZf94KS7gMZWQuGmeyAKI0tYMK+7YSRg==",
+  "dgSpecHash": "cISjvhkVnJe5PrMr0pl9SK/l4mTlYBlRi9tGQ9iOpjqxSE+qjRIutAAgIqP6GdntPFLi9fjb9Hf+PkDc30j/bQ==",
   "success": true,
-  "projectFilePath": "D:\\NEA\\NEAGame\\NEAGame.csproj",
+  "projectFilePath": "d:\\NEA\\NEAGame\\NEAGame.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\max_k\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\max_k\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
@@ -46,10 +46,10 @@
     "C:\\Users\\max_k\\.nuget\\packages\\system.text.json\\4.7.2\\system.text.json.4.7.2.nupkg.sha512",
     "C:\\Users\\max_k\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\max_k\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
-    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.18\\microsoft.aspnetcore.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.18\\microsoft.netcore.app.host.win-x64.6.0.18.nupkg.sha512",
     "C:\\Users\\max_k\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.18\\microsoft.netcore.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.18\\microsoft.windowsdesktop.app.ref.6.0.18.nupkg.sha512"
+    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.18\\microsoft.windowsdesktop.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.18\\microsoft.aspnetcore.app.ref.6.0.18.nupkg.sha512",
+    "C:\\Users\\max_k\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.18\\microsoft.netcore.app.host.win-x64.6.0.18.nupkg.sha512"
   ],
   "logs": []
 }
