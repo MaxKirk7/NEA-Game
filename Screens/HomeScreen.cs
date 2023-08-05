@@ -11,11 +11,11 @@ using Microsoft.Xna.Framework;
 namespace NEAScreen;
 class HomeScreen : IScreen
 {
-    private bool ScreenOver;
+    private readonly bool ScreenOver;
     //Skins need to be loaded from database
-    private Sql Query = new Sql();
-    private List<Skin> AvailableSkins = new List<Skin>();
-    private List<string> SavedFile = new List<string>();
+    private readonly Sql Query = new();
+    private readonly List<Skin> AvailableSkins = new();
+    private readonly List<string> SavedFile = new();
     private Thing Background;
     private Sprite CurrentSkin;
     private BlankBox SkinBackGround;
@@ -35,6 +35,7 @@ class HomeScreen : IScreen
         }
         else
         {
+
         }
 
         //Set backgrounds to use
@@ -119,6 +120,6 @@ class HomeScreen : IScreen
     }
     public bool EndScreen()
     {
-        return false;
+        return ScreenOver;
     }
 }

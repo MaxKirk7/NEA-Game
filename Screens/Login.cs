@@ -24,7 +24,7 @@ namespace NEAScreen
         private InputBox Username;
         private InputBox Password;
         private TextBox Header;
-        private List<string> SavedFile = new List<string>();
+        private readonly List<string> SavedFile = new();
 
 
         public void LoadContent(ContentManager con, SpriteBatch sp)
@@ -168,14 +168,12 @@ namespace NEAScreen
             }
             if (ScreenOver)
             {
-                using (StreamWriter writer = new StreamWriter("SavedInfo.txt"))
+                using StreamWriter writer = new("SavedInfo.txt");
+                foreach (string s in SavedFile)
                 {
-                    foreach (string s in SavedFile)
-                    {
-                        writer.Write(s + '\n');
-                    }
-                    writer.Flush();
+                    writer.Write(s + '\n');
                 }
+                writer.Flush();
             }
             Button.EndButtons();
             return ScreenOver;

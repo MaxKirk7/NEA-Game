@@ -8,9 +8,9 @@ namespace NEAGame;
 
 public class Game1 : Game
 {
-    private List<IScreen> AllScreens = new List<IScreen> { new LoadingScreen(), new Login(), new HomeScreen() };//more screens to be added
+    private readonly List<IScreen> AllScreens = new() { new LoadingScreen(), new Login(), new HomeScreen() };//more screens to be added
     private ScreenManager screens;
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     public const int ScreenWidth = 1920;
     public const int ScreenHeight = 1080;

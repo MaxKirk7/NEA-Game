@@ -8,10 +8,10 @@ using System.Collections.Generic;
 namespace _Sprites;
 class InputBox : TextBox
 {
-    private List<char> Input;
+    private readonly List<char> Input;
     private bool BoxSelected;
-    private int MaxLength; //set the max length of this input
-    private static List<InputBox> AllInputBoxes = new List<InputBox>();
+    private readonly int MaxLength; //set the max length of this input
+    private static readonly List<InputBox> AllInputBoxes = new();
     private bool KeyPress = false; //make sure each charecter is only inputed once
     private Rectangle rect;
     public InputBox(string FontLocation, string text, ContentManager con, SpriteBatch sp, int X, int Y, Color StringColor, double scale, int width, int height, int MaxLength) : base(FontLocation, text, con, sp, X, Y, StringColor, scale, width, height)
@@ -52,7 +52,8 @@ class InputBox : TextBox
             {
 
                 var CharKey = PressedKey.ToString()[0];
-                List<Keys> AcceptedPuncuation = new List<Keys>{
+                List<Keys> AcceptedPuncuation = new()
+                {
                     Keys.OemQuotes, //will represent @
                     Keys.OemPeriod,
                     Keys.OemMinus,
@@ -103,7 +104,7 @@ class InputBox : TextBox
                 StringInput += c;
             }
             Vector2 NewOrigin = Font.MeasureString(Input.ToString()) * 0.5F;
-            Vector2 NewPosition = new Vector2(Position.X + rect.Width / 3, Position.Y);
+            Vector2 NewPosition = new(Position.X + rect.Width / 3, Position.Y);
             Sp.DrawString(Font, StringInput, NewPosition, StringColor, 0F, NewOrigin, (float)FontScale, SpriteEffects.None, 0f);
         }
     }
@@ -116,7 +117,7 @@ class InputBox : TextBox
         }
         return StringInput;
     }
-    private void DeselectOtherBoxes()
+    private static void DeselectOtherBoxes()
     {
         foreach (InputBox box in AllInputBoxes)
         {
@@ -137,32 +138,33 @@ class InputBox : TextBox
             // When selected other boxes are deselected
         }
     }
-    private char GetNumberChar(Keys key)
+    private static char GetNumberChar(Keys key)
     {
-        switch (key)
+        return key switch
         {
-            case Keys.D0: return '0';
-            case Keys.D1: return '1';
-            case Keys.D2: return '2';
-            case Keys.D3: return '3';
-            case Keys.D4: return '4';
-            case Keys.D5: return '5';
-            case Keys.D6: return '6';
-            case Keys.D7: return '7';
-            case Keys.D8: return '8';
-            case Keys.D9: return '9';
-            default: return '0';
-        }
+            Keys.D0 => '0',
+            Keys.D1 => '1',
+            Keys.D2 => '2',
+            Keys.D3 => '3',
+            Keys.D4 => '4',
+            Keys.D5 => '5',
+            Keys.D6 => '6',
+            Keys.D7 => '7',
+            Keys.D8 => '8',
+            Keys.D9 => '9',
+            _ => '0',
+        };
     }
-    private char GetPunctuation(Keys key){
-        switch (key){
-            case Keys.OemPeriod: return '.';
-            case Keys.OemMinus: return '-';
-            case Keys.OemComma: return ',';
-            case Keys.OemQuotes: return '@';
-            case Keys.OemPlus: return '_';
-            default: return' ';
-        }
+    private static char GetPunctuation(Keys key){
+        return key switch
+        {
+            Keys.OemPeriod => '.',
+            Keys.OemMinus => '-',
+            Keys.OemComma => ',',
+            Keys.OemQuotes => '@',
+            Keys.OemPlus => '_',
+            _ => ' ',
+        };
     }
     public override void ChangeText(string NewText)
     {

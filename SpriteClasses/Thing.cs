@@ -8,8 +8,8 @@ namespace _Sprites
     {
         private Vector2 Origin;
         private float rotationAngle = 0;
-        private static float rotationsPerSec = 0.25F;
-        float rotationSpeed = (MathHelper.TwoPi) * rotationsPerSec;
+        private static readonly float rotationsPerSec = 0.25F;
+        readonly float rotationSpeed = (MathHelper.TwoPi) * rotationsPerSec;
         public Thing(string Location, ContentManager con, SpriteBatch sp, int Width, int Height, int X, int Y) : base(Location, con, sp, Width, Height, X, Y)
         {
             Origin = new Vector2(Texture.Width/2,Texture.Height/2);
