@@ -35,7 +35,6 @@ class Sql
     public bool NewPlayerTbl(string Username, string Password)
     {
         var ExistingUsername = false;
-        var PlayerID = "";
         var query = "Select PlayerID From [Player Tbl] where Username = @User";
         using (SqlConnection con = new SqlConnection(connection))
         {
@@ -48,8 +47,6 @@ class Sql
                     if (reader.HasRows)
                     {
                         ExistingUsername = true;
-                        reader.Read();
-                        PlayerID = reader.GetInt32(0).ToString();
                     }
                 }
             }

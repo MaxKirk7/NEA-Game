@@ -46,6 +46,9 @@ class Button : TextBox
             if (mouse.LeftButton == ButtonState.Pressed){
                 IsPressed = true;
             }
+            else{
+                IsPressed = false;
+            }
         }
         else{ActiveColour = Normal;}
     }
@@ -63,10 +66,10 @@ class Button : TextBox
     public void AddButton(){
         this.IsActive = true;
     }
-    public void UnPress(){
-        IsPressed = false;
-    }
     public static void EndButtons(){
         AllButtons.Clear();
+    }
+    public bool IsButtonActive(){
+        return IsActive;
     }
 }

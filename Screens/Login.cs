@@ -10,7 +10,7 @@ namespace NEAScreen
 {
     class Login : IScreen
     {
-        private bool FirstGame = true;
+        
         private bool ScreenOver = false;
         private Sql LoginScreenQuery;
         private Button SignUp;
@@ -36,9 +36,9 @@ namespace NEAScreen
                 {
                     SavedFile.Add(s);
                 }
-                if (SavedFile.Count > 0)
+                if (SavedFile.Count > 0 && SavedFile[0].Length != 0)
                 {
-                    FirstGame = false;
+                    ScreenOver = true;
                 }
             }
             else
@@ -53,11 +53,11 @@ namespace NEAScreen
             Header = new TextBox("Fonts/TitleFont", "Salam Armada", con, sp, Game1.ScreenWidth / 2, 200, Color.Black, 1.8);
             HeaderBox = new BlankBox(Color.BlueViolet, con, sp, 300, 50, Game1.ScreenWidth / 2, 200);
             //Buttons
-            SignIn = new Button("Fonts/TitleFont", "SignIn", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet);
+            SignIn = new Button("Fonts/TitleFont", "Log In", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
             //SignIn is drawn the first third of the scree
-            SignUp = new Button("Fonts/TitleFont", "SignUp", con, sp, (Game1.ScreenWidth / 3) * 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet);
+            SignUp = new Button("Fonts/TitleFont", "Sign Up", con, sp, Game1.ScreenWidth / 3 * 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
             //SignUp is drawn on the 2nd third 
-            Enter = new Button("Fonts/TitleFont", "Enter", con, sp, (Game1.ScreenWidth / 2), (int)((Game1.ScreenHeight / 3) * 2.25), Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet);
+            Enter = new Button("Fonts/TitleFont", "Enter", con, sp, (Game1.ScreenWidth / 2), (int)((Game1.ScreenHeight / 3) * 2.25), Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
             Enter.RemoveButton();
             //Set the enter button to hide
 
@@ -79,7 +79,6 @@ namespace NEAScreen
                 Password.Update();
                 if (Enter.ButtonPressed())
                 {
-                    Enter.UnPress();
                     if ((Username.GetInput().Length >= 5 && Password.GetInput().Length >= 8) || Username.GetInput() == "TestUser" && Password.GetInput() == "TestPass")
                     {
                         var result = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
@@ -162,18 +161,9 @@ namespace NEAScreen
 
         public bool EndScreen()
         {
-            if (!FirstGame)
-            {
-                ScreenOver = true;
-            }
             if (ScreenOver)
             {
-                using StreamWriter writer = new("SavedInfo.txt");
-                foreach (string s in SavedFile)
-                {
-                    writer.Write(s + '\n');
-                }
-                writer.Flush();
+                File.WriteAllLines("SavedInfo.txt", SavedFile);
             }
             Button.EndButtons();
             return ScreenOver;

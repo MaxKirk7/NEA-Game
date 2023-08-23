@@ -8,7 +8,7 @@ namespace NEAGame;
 
 public class Game1 : Game
 {
-    private readonly List<IScreen> AllScreens = new() { new LoadingScreen(), new Login(), new HomeScreen() };//more screens to be added
+    private readonly List<IScreen> AllScreens = new() { new LoadingScreen(), new LoginScreen(), new HomeScreen() };//more screens to be added
     private ScreenManager screens;
     private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;

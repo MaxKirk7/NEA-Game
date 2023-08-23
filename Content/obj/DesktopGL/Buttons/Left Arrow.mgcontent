@@ -3,7 +3,7 @@
   <SourceFile>D:/NEA/NEAGame/Content/Buttons/Left Arrow.png</SourceFile>
   <SourceTime>2023-08-01T13:37:05.8716094+01:00</SourceTime>
   <DestFile>D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Left Arrow.xnb</DestFile>
-  <DestTime>2023-08-01T13:40:12.5994202+01:00</DestTime>
+  <DestTime>2023-08-05T19:06:25.2722863+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T12:44:56+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
@@ -30,7 +30,7 @@
   </Parameters>
   <Parameters>
     <Key>MakeSquare</Key>
-    <Value>False</Value>
+    <Value>True</Value>
   </Parameters>
   <Parameters>
     <Key>TextureFormat</Key>

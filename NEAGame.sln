@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEAGame", "NEAGame.csproj", "{672DD657-D0EA-4690-9BC6-143A3825993F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NEAGame", "NEAGame.csproj", "{B0CBDC8D-B0AF-404C-999D-1E61DA53C6D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{672DD657-D0EA-4690-9BC6-143A3825993F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{672DD657-D0EA-4690-9BC6-143A3825993F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{672DD657-D0EA-4690-9BC6-143A3825993F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{672DD657-D0EA-4690-9BC6-143A3825993F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0CBDC8D-B0AF-404C-999D-1E61DA53C6D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0CBDC8D-B0AF-404C-999D-1E61DA53C6D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0CBDC8D-B0AF-404C-999D-1E61DA53C6D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0CBDC8D-B0AF-404C-999D-1E61DA53C6D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {492AD037-0B67-408F-AC63-9DC80C33C711}
+		SolutionGuid = {A5BDAC1E-351D-49C4-9C2D-17859A2D9CFD}
 	EndGlobalSection
 EndGlobal

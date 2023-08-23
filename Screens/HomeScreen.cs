@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 namespace NEAScreen;
 class HomeScreen : IScreen
 {
-    private readonly bool ScreenOver;
+    private bool ScreenOver;
     //Skins need to be loaded from database
     private readonly Sql Query = new();
     private readonly List<Skin> AvailableSkins = new();
@@ -23,6 +23,7 @@ class HomeScreen : IScreen
     private Button LeftArrow;
     private Button RightArrow;
     private int ActiveSkinIndex;
+    private Button PlayGame;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
         //Set backgrounds to use
@@ -33,19 +34,16 @@ class HomeScreen : IScreen
                 SavedFile.Add(s);
             }
         }
-        else
-        {
-
-        }
 
         //Set backgrounds to use
         Background = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         //Create Buttons
         test = new TextBox("Fonts/TitleFont", "Test", con, sp, 200, 400, Color.Red, 2);
+        PlayGame = new("Fonts/TitleFont","Start Game",con,sp,Game1.ScreenWidth/2,600,Color.Black,2,300,150,new Color(212, 152, 177),Color.DarkGoldenrod);
 
         //Set Swapping feature
-        LeftArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 - 220, 200, Color.Red, 2, 300, 300, Color.White, Color.Yellow, "Buttons/Left Arrow");
-        RightArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 + 220, 200, Color.Red, 2, 300, 300, Color.White, Color.Yellow, "Buttons/Right Arrow");
+        LeftArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 - 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177),Color.DarkGoldenrod, "Buttons/Left Arrow");
+        RightArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 + 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177),Color.DarkGoldenrod, "Buttons/Right Arrow");
         SkinBackGround = new BlankBox(new Color(9, 20, 9, 100), con, sp, 200, 200, Game1.ScreenWidth / 2, 200);
         //set up skins to lookthrough
         var SkinIds = Query.GetAvailableSkin(SavedFile[0].Replace("PlayerID,", ""));
@@ -90,7 +88,6 @@ class HomeScreen : IScreen
                 ActiveSkinIndex = AvailableSkins.Count - 1;
             }
             CurrentSkin.ChangeTexture(AvailableSkins[ActiveSkinIndex].BaseSkin);
-            LeftArrow.UnPress();
         }
         if (RightArrow.ButtonPressed())
         {
@@ -105,7 +102,9 @@ class HomeScreen : IScreen
                 ActiveSkinIndex = 0;
             }
             CurrentSkin.ChangeTexture(AvailableSkins[ActiveSkinIndex].BaseSkin);
-            RightArrow.UnPress();
+        }
+        if (PlayGame.ButtonPressed()){
+            ScreenOver = true;
         }
     }
     public void Draw(SpriteBatch sp)
@@ -120,6 +119,11 @@ class HomeScreen : IScreen
     }
     public bool EndScreen()
     {
+        using StreamWriter writer = new("SavedInfo.txt");
+            foreach (string s in SavedFile){
+                writer.WriteLine(s);
+            }
+            writer.Flush();
         return ScreenOver;
     }
 }
