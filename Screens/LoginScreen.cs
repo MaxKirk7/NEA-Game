@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Threading;
+using System;
 
 namespace NEAScreen;
 class LoginScreen : IScreen
@@ -29,13 +30,17 @@ class LoginScreen : IScreen
     {
         using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate))
         {
-            using (StreamReader reader = new (stream))
+            using (StreamReader reader = new(stream))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     SavedFile.Add(line);
                 }
+            }
+            if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0]))
+            {
+                ScreenOver = true;
             }
         }
         //Common Thigs that arent going to change
@@ -105,10 +110,13 @@ class LoginScreen : IScreen
                             var ExisitngName = LoginScreenQuery.NewPlayerTbl(Username.GetInput(), Password.GetInput());
                             if (!ExisitngName)
                             {
-                                Thread.Sleep(5000);
                                 //get PlayerID and save it for later use
                                 string PlayerID = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput());
-                                SavedFile[0] = $"PlayerID,{PlayerID}";
+                                SavedFile.Add($"PlayerID,{PlayerID}");
+                                //add the first achievment for the player
+                                LoginScreenQuery.AddAchievment(PlayerID,"1");
+                                //end the screen
+                                ScreenOver = true;
                             }
                             else
                             {

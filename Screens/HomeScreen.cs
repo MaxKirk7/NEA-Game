@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Microsoft.Xna.Framework;
+using System.Security.Cryptography;
 
 namespace NEAScreen;
 class HomeScreen : IScreen
@@ -27,11 +28,19 @@ class HomeScreen : IScreen
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
         //Set backgrounds to use
-        if (File.Exists("SavedInfo.txt"))
+        using (FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Read))
         {
-            foreach (string s in File.ReadLines("SavedInfo.txt"))
+            using (StreamReader reader = new(stream))
             {
-                SavedFile.Add(s);
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    SavedFile.Add(line);
+                }
+            }
+            if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0]))
+            {
+                ScreenOver = true;
             }
         }
 
@@ -39,11 +48,11 @@ class HomeScreen : IScreen
         Background = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         //Create Buttons
         test = new TextBox("Fonts/TitleFont", "Test", con, sp, 200, 400, Color.Red, 2);
-        PlayGame = new("Fonts/TitleFont","Start Game",con,sp,Game1.ScreenWidth/2,600,Color.Black,2,300,150,new Color(212, 152, 177),Color.DarkGoldenrod);
+        PlayGame = new("Fonts/TitleFont", "Start Game", con, sp, Game1.ScreenWidth / 2, 600, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
 
         //Set Swapping feature
-        LeftArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 - 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177),Color.DarkGoldenrod, "Buttons/Left Arrow");
-        RightArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 + 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177),Color.DarkGoldenrod, "Buttons/Right Arrow");
+        LeftArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 - 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Left Arrow");
+        RightArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 + 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Right Arrow");
         SkinBackGround = new BlankBox(new Color(9, 20, 9, 100), con, sp, 200, 200, Game1.ScreenWidth / 2, 200);
         //set up skins to lookthrough
         var SkinIds = Query.GetAvailableSkin(SavedFile[0].Replace("PlayerID,", ""));
@@ -103,7 +112,8 @@ class HomeScreen : IScreen
             }
             CurrentSkin.ChangeTexture(AvailableSkins[ActiveSkinIndex].BaseSkin);
         }
-        if (PlayGame.ButtonPressed()){
+        if (PlayGame.ButtonPressed())
+        {
             ScreenOver = true;
         }
     }
@@ -119,11 +129,15 @@ class HomeScreen : IScreen
     }
     public bool EndScreen()
     {
-        using StreamWriter writer = new("SavedInfo.txt");
+        if (ScreenOver){
+            using FileStream stream = new("SavedInfo.txt",FileMode.Open,FileAccess.Write);
+            using StreamWriter writer = new(stream);
             foreach (string s in SavedFile){
                 writer.WriteLine(s);
             }
             writer.Flush();
+            Button.EndButtons();
+        }
         return ScreenOver;
     }
 }

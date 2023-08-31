@@ -4,15 +4,15 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/NEA/NEAGame/Content/Buttons/Left Arrow.png</File>
-    <File>D:/NEA/NEAGame/Content/Buttons/Right Arrow.png</File>
-    <File>D:/NEA/NEAGame/Content/Buttons/Rounded Square Button.png</File>
-    <File>D:/NEA/NEAGame/Content/Fonts/TitleFont.spritefont</File>
-    <File>D:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3</File>
-    <File>D:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp</File>
-    <File>D:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png</File>
-    <File>D:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png</File>
-    <File>D:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png</File>
+    <File>d:/NEA/NEAGame/Content/Buttons/Left Arrow.png</File>
+    <File>d:/NEA/NEAGame/Content/Buttons/Right Arrow.png</File>
+    <File>d:/NEA/NEAGame/Content/Buttons/Rounded Square Button.png</File>
+    <File>d:/NEA/NEAGame/Content/Fonts/TitleFont.spritefont</File>
+    <File>d:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3</File>
+    <File>d:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp</File>
+    <File>d:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png</File>
+    <File>d:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png</File>
+    <File>d:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
