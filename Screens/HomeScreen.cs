@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 namespace NEAScreen;
 class HomeScreen : IScreen
 {
-    private bool ScreenOver = false;
+    private bool ScreenOver;
     //Skins need to be loaded from database
     private readonly Sql Query = new();
     private readonly List<Skin> AvailableSkins = new();
@@ -24,6 +24,7 @@ class HomeScreen : IScreen
     private Button RightArrow;
     private int ActiveSkinIndex;
     private Button PlayGame;
+    private Button NewGame;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
         //Set backgrounds to use
@@ -37,17 +38,14 @@ class HomeScreen : IScreen
                     SavedFile.Add(line);
                 }
             }
-            if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0]))
-            {
-                ScreenOver = true;
-            }
         }
+
         //Set backgrounds to use
         Background = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         //Create Buttons
         test = new TextBox("Fonts/TitleFont", "Test", con, sp, 200, 400, Color.Red, 2);
         PlayGame = new("Fonts/TitleFont", "Start Game", con, sp, Game1.ScreenWidth / 2, 600, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
-
+        NewGame = new("Fonts/TitleFont", "New Game", con, sp, Game1.ScreenWidth / 2, 750, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
         //Set Swapping feature
         LeftArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 - 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Left Arrow");
         RightArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 + 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Right Arrow");
@@ -127,10 +125,12 @@ class HomeScreen : IScreen
     }
     public bool EndScreen()
     {
-        if (ScreenOver){
-            using FileStream stream = new("SavedInfo.txt",FileMode.Open,FileAccess.Write);
+        if (ScreenOver)
+        {
+            using FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Write);
             using StreamWriter writer = new(stream);
-            foreach (string s in SavedFile){
+            foreach (string s in SavedFile)
+            {
                 writer.WriteLine(s);
             }
             writer.Flush();
