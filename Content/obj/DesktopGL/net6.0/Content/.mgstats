@@ -1,10 +1,10 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"d:/NEA/NEAGame/Content/Buttons/Left Arrow.png","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Left Arrow.xnb","TextureProcessor","Texture2DContent",10084,448285,0.5801897
-"d:/NEA/NEAGame/Content/Buttons/Right Arrow.png","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Right Arrow.xnb","TextureProcessor","Texture2DContent",12059,448285,0.0842557
-"d:/NEA/NEAGame/Content/Buttons/Rounded Square Button.png","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Rounded Square Button.xnb","TextureProcessor","Texture2DContent",9571,246001,0.0190024
-"d:/NEA/NEAGame/Content/Fonts/TitleFont.spritefont","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Fonts/TitleFont.xnb","FontDescriptionProcessor","SpriteFontContent",2069,21535,0.3813758
-"d:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sounds/Loading.xnb","SongProcessor","SongContent",215919,125,1.1284738
-"d:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sprites/BackGroundSpace.xnb","TextureProcessor","Texture2DContent",53776,896517,0.0985541
-"d:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sprites/Moon.xnb","TextureProcessor","Texture2DContent",262563,559585,0.0600621
-"d:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Player/Skins/Base/Base Skin.xnb","TextureProcessor","Texture2DContent",16597,1208485,0.0831266
-"d:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png","d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Player/Skins/Moving/Base Fly.xnb","TextureProcessor","Texture2DContent",17629,1208485,0.072103
+"D:/NEA/NEAGame/Content/Buttons/Left Arrow.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Left Arrow.xnb","TextureProcessor","Texture2DContent",10084,448285,0.3523962
+"D:/NEA/NEAGame/Content/Buttons/Right Arrow.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Right Arrow.xnb","TextureProcessor","Texture2DContent",12059,448285,0.0626883
+"D:/NEA/NEAGame/Content/Buttons/Rounded Square Button.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Rounded Square Button.xnb","TextureProcessor","Texture2DContent",9571,246001,0.0200255
+"D:/NEA/NEAGame/Content/Fonts/TitleFont.spritefont","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Fonts/TitleFont.xnb","FontDescriptionProcessor","SpriteFontContent",2069,21535,0.2025831
+"D:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sounds/Loading.xnb","SongProcessor","SongContent",215919,125,0.8390436
+"D:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sprites/BackGroundSpace.xnb","TextureProcessor","Texture2DContent",53776,896517,0.0859085
+"D:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sprites/Moon.xnb","TextureProcessor","Texture2DContent",262563,559585,0.0543383
+"D:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Player/Skins/Base/Base Skin.xnb","TextureProcessor","Texture2DContent",16597,1208485,0.0814244
+"D:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Player/Skins/Moving/Base Fly.xnb","TextureProcessor","Texture2DContent",17629,1208485,0.0588795

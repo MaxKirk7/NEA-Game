@@ -7,12 +7,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Microsoft.Xna.Framework;
-using System.Security.Cryptography;
 
 namespace NEAScreen;
 class HomeScreen : IScreen
 {
-    private bool ScreenOver;
+    private bool ScreenOver = false;
     //Skins need to be loaded from database
     private readonly Sql Query = new();
     private readonly List<Skin> AvailableSkins = new();
@@ -43,7 +42,6 @@ class HomeScreen : IScreen
                 ScreenOver = true;
             }
         }
-
         //Set backgrounds to use
         Background = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         //Create Buttons

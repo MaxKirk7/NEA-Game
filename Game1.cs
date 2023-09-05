@@ -50,7 +50,7 @@ public class Game1 : Game
         if (screens.IsScreenOver())
         {
             var IndexCurrentScreen = AllScreens.IndexOf(screens.currentScreen());
-            if (IndexCurrentScreen + 1 <= AllScreens.Count) //stop the List from going out of its limit
+            if (IndexCurrentScreen + 1 < AllScreens.Count) //stop the List from going out of its limit
             {
                 screens.setScreen((IScreen)AllScreens[IndexCurrentScreen + 1], Content, _spriteBatch);
             }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>d:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3</SourceFile>
+  <SourceFile>D:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3</SourceFile>
   <SourceTime>2023-07-22T17:48:28.1202377+01:00</SourceTime>
-  <DestFile>d:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sounds/Loading.xnb</DestFile>
-  <DestTime>2023-08-31T22:20:52.3712354+01:00</DestTime>
+  <DestFile>D:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sounds/Loading.xnb</DestFile>
+  <DestTime>2023-09-05T21:38:25.9099648+01:00</DestTime>
   <Importer>Mp3Importer</Importer>
   <ImporterTime>2022-07-26T12:44:56+01:00</ImporterTime>
   <Processor>SongProcessor</Processor>
@@ -15,6 +15,6 @@
   <Dependencies />
   <BuildAsset />
   <BuildOutput>
-    <string>d:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sounds/Loading.ogg</string>
+    <string>D:/NEA/NEAGame/Content/bin/DesktopGL/Content/LoadingScreen/Sounds/Loading.ogg</string>
   </BuildOutput>
 </PipelineBuildEvent>

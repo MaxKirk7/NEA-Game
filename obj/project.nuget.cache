@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cISjvhkVnJe5PrMr0pl9SK/l4mTlYBlRi9tGQ9iOpjqxSE+qjRIutAAgIqP6GdntPFLi9fjb9Hf+PkDc30j/bQ==",
+  "dgSpecHash": "neFXQTTr6AP+OoBCTYfcv4/4FXA/LJOI73vMc4QsYdvK3DFxwEOm40PZf94KS7gMZWQuGmeyAKI0tYMK+7YSRg==",
   "success": true,
-  "projectFilePath": "d:\\NEA\\NEAGame\\NEAGame.csproj",
+  "projectFilePath": "D:\\NEA\\NEAGame\\NEAGame.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\max_k\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\max_k\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
