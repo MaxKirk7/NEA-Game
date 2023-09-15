@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NEAScreen;
+using Serilog;
+using Serilog.Sinks.SystemConsole;
 
 namespace NEAGame;
 
@@ -12,8 +14,8 @@ public class Game1 : Game
     private ScreenManager screens;
     private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    public const int ScreenWidth = 1920;
-    public const int ScreenHeight = 1080;
+    public const int ScreenWidth = (int)(1920/1.2);
+    public const int ScreenHeight = (int)(1080/1.2);
     public const int Frames = 60;
 
     public Game1()
@@ -27,6 +29,9 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = ScreenWidth;
         IsFixedTimeStep = true;
         TargetElapsedTime = System.TimeSpan.FromSeconds(1.0 / Frames);
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
     }
 
     protected override void Initialize()
@@ -49,6 +54,7 @@ public class Game1 : Game
             Exit();
         if (screens.IsScreenOver())
         {
+            Log.Information($"{screens.currentScreen()}: Screen Over");
             var IndexCurrentScreen = AllScreens.IndexOf(screens.currentScreen());
             if (IndexCurrentScreen + 1 < AllScreens.Count) //stop the List from going out of its limit
             {

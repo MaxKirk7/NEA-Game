@@ -27,6 +27,7 @@ namespace NEAScreen
         private TextBox Header;
         private BlankBox EmailBox;
         private InputBox Email;
+        private bool SigningUp = false;
         private readonly List<string> SavedFile = new();
 
         public void LoadContent(ContentManager con, SpriteBatch sp)
@@ -74,6 +75,7 @@ namespace NEAScreen
             {
                 if (SignUp.ButtonPressed())
                 {
+                    SigningUp = true;
                     Email.Update();
                 }
 
@@ -120,8 +122,10 @@ namespace NEAScreen
                         // Handle sign-up logic
                         if (result == "null")
                         {
-                            var ExistingName = LoginScreenQuery.NewPlayerTbl(Username.GetInput(), Password.GetInput());
-                            if (!ExistingName)
+                            //log error here
+                            var NewAccount = LoginScreenQuery.CreateAccount(Username.GetInput(), Password.GetInput(), Email.GetInput());
+                            //end error
+                            if (NewAccount) // if the account details are new
                             {
                                 string PlayerID = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput());
                                 SavedFile.Add($"PlayerID,{PlayerID}");
@@ -130,7 +134,8 @@ namespace NEAScreen
                             }
                             else
                             {
-                                Username.ChangeText("Username already Exists");
+                                Username.ChangeText("Username May already Exists");
+                                Email.ChangeText("Email May already Exist");
                             }
                         }
                         else
@@ -178,21 +183,34 @@ namespace NEAScreen
 
         private bool IsValidInput()
         {
+            string username = Username.GetInput();
+            string password = Password.GetInput();
+            string email = Email.GetInput();
+            bool valid = true;
 
-            if (Username.GetInput().Length < 5 || Password.GetInput().Length < 8 || (Username.GetInput() != "TestUser" && Password.GetInput() != "TestPass") || (SignUp.ButtonPressed() && !Email.GetInput().Contains('@')))
+            if (string.IsNullOrEmpty(username) || username.Length < 5)
             {
-                if (!Email.GetInput().Contains('@'))
+                Username.ChangeText("Username should be at least 5 characters");
+                valid = false;
+            }
+
+            if (string.IsNullOrEmpty(password) || password.Length < 8)
+            {
+                Password.ChangeText("Password should be at least 8 characters");
+                valid = false;
+            }
+
+            if (SigningUp)
+            {
+                if (string.IsNullOrEmpty(email) || !email.Contains('@'))
                 {
                     Email.ChangeText("Invalid Email Address");
+                    valid = false;
                 }
-                else
-                {
-                    Username.ChangeText("Username or Password not long enough");
-                    Password.ChangeText("Min length 5 and 8 characters");
-                }
-                return false;
             }
-            return true;
+
+            return valid;
         }
+
     }
 }
