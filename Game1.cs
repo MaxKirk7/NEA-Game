@@ -14,8 +14,8 @@ public class Game1 : Game
     private ScreenManager screens;
     private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    public const int ScreenWidth = (int)(1920/1.2);
-    public const int ScreenHeight = (int)(1080/1.2);
+    public const int ScreenWidth = 1920;
+    public const int ScreenHeight = 1080;
     public const int Frames = 60;
 
     public Game1()
@@ -25,7 +25,7 @@ public class Game1 : Game
         IsMouseVisible = true;
         Window.IsBorderless = true;
         Window.AllowUserResizing = false;
-        _graphics.PreferredBackBufferHeight = ScreenHeight;
+        _graphics.PreferredBackBufferHeight = ScreenHeight/2;
         _graphics.PreferredBackBufferWidth = ScreenWidth;
         IsFixedTimeStep = true;
         TargetElapsedTime = System.TimeSpan.FromSeconds(1.0 / Frames);

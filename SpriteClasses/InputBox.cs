@@ -2,8 +2,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace _Sprites;
 class InputBox : TextBox
@@ -12,8 +14,10 @@ class InputBox : TextBox
     private bool BoxSelected;
     private readonly int MaxLength; //set the max length of this input
     private static readonly List<InputBox> AllInputBoxes = new();
-    private bool KeyPress = false; //make sure each charecter is only inputed once
     private Rectangle rect;
+    private readonly Queue Q = new(10);
+    private float LastKeyPressTime = 0F;
+    private readonly float debounceDelay = 0.14f; //delay in seconds between recording keys
     public InputBox(string FontLocation, string text, ContentManager con, SpriteBatch sp, int X, int Y, Color StringColor, double scale, int width, int height, int MaxLength) : base(FontLocation, text, con, sp, X, Y, StringColor, scale, width, height)
     {
         AllInputBoxes.Add(this);
@@ -22,74 +26,7 @@ class InputBox : TextBox
         rect = new Rectangle(X - width / 2, Y - height / 2, width, height); //create the rectangle of the InputBox
         this.MaxLength = MaxLength;
     }
-    public void Update()
-    {
-        CheckSelected();
-        if (BoxSelected && !KeyPress && Input.Count < MaxLength)
-        {
-            GetKeyboardInput();
-        }
-        if (Keyboard.GetState().GetPressedKeyCount() == 0)
-        {
-            KeyPress = false;
-        }
-    }
-    private void GetKeyboardInput()
-    {
-        var KeyboardState = Keyboard.GetState();
-        if (KeyboardState.GetPressedKeys().Length > 0)
-        {
-            KeyPress = true; // set that a key is being pressed
-            var PressedKey = KeyboardState.GetPressedKeys()[0];
-            if (PressedKey == Keys.Back || PressedKey == Keys.Delete)
-            { // delete back a charecter
-                if (Input.Count > 0)
-                {
-                    Input.RemoveAt(Input.Count - 1);
-                }
-            }
-            else
-            {
 
-                var CharKey = PressedKey.ToString()[0];
-                List<Keys> AcceptedPuncuation = new()
-                {
-                    Keys.OemQuotes, //will represent @
-                    Keys.OemPeriod,
-                    Keys.OemMinus,
-                    Keys.OemComma,
-                    Keys.OemPlus //will represent underscore
-                };
-                if (((PressedKey >= Keys.A && PressedKey <= Keys.Z) || //check if its alphebetical
-            (PressedKey >= Keys.D0 && PressedKey <= Keys.D9) || AcceptedPuncuation.Contains(PressedKey)))//check if key is numerical or accepted puncutation
-                {
-                    if (PressedKey >= Keys.D0 && PressedKey <= Keys.D9)
-                    {
-                        Input.Add(GetNumberChar(PressedKey));
-                    }
-                    else if (AcceptedPuncuation.Contains(PressedKey)){
-                        Input.Add(GetPunctuation(PressedKey));
-                    }
-                    else
-                    {
-                        if (char.IsLetter(CharKey)) //only records Letters,Digits,Symbols nad punctuation
-                        {
-
-                            if (KeyboardState.CapsLock && char.IsLetterOrDigit(CharKey)) //Checks if capslock is active
-                            {
-                                CharKey = Char.ToUpper(CharKey);
-                            }
-                            else
-                            {
-                                CharKey = Char.ToLower(CharKey);
-                            }
-                            Input.Add(CharKey);
-                        }
-                    }
-                }
-            }
-        }
-    }
     public override void Draw() //Write the openng message, then once the user types will show what they are typing
     {
         if (Input.ToArray().Length == 0)
@@ -138,38 +75,182 @@ class InputBox : TextBox
             // When selected other boxes are deselected
         }
     }
-    private static char GetNumberChar(Keys key)
-    {
-        return key switch
-        {
-            Keys.D0 => '0',
-            Keys.D1 => '1',
-            Keys.D2 => '2',
-            Keys.D3 => '3',
-            Keys.D4 => '4',
-            Keys.D5 => '5',
-            Keys.D6 => '6',
-            Keys.D7 => '7',
-            Keys.D8 => '8',
-            Keys.D9 => '9',
-            _ => '0',
-        };
-    }
-    private static char GetPunctuation(Keys key){
-        return key switch
-        {
-            Keys.OemPeriod => '.',
-            Keys.OemMinus => '-',
-            Keys.OemComma => ',',
-            Keys.OemQuotes => '@',
-            Keys.OemPlus => '_',
-            _ => ' ',
-        };
-    }
+
     public override void ChangeText(string NewText)
     {
         Input.Clear();
         base.ChangeText(NewText);
     }
 
+    private void GetUserInput(float delta)
+    {
+        KeyboardState CurrentInput = Keyboard.GetState();
+        var keyInputs = CurrentInput.GetPressedKeys();
+
+        foreach (Keys key in keyInputs)
+        {
+            // Check if enough time has passed since the last key press
+            if (LastKeyPressTime >= debounceDelay)
+            {
+                if (key != Keys.LeftShift || key != Keys.RightShift)
+                {
+                    Q.enQueue(key); // Add the key pressed to the queue
+                    LastKeyPressTime = 0f; // Reset timeSinceLastKeyPress
+                }
+            }
+
+        }
+
+        // Update timeSinceLastKeyPress
+        LastKeyPressTime += delta;
+    }
+    private void AppendWithInput()
+    {
+        var key = Q.deQueue();
+        if (key == Keys.Back){
+            if (Input.Count > 0){
+                Input.RemoveAt(Input.Count-1);
+            }
+        }
+        if (key == Keys.None)
+        {
+            return; // only workds with valid input
+        }
+        var CharKey = KeyToChar(key);
+        if (CharKey != ' ')
+        {
+            Input.Add(CharKey);
+            Log.Information($"Input appended: {Input.Count()}");
+            Log.Information($"Key value = {CharKey}");
+        }
+    }
+    private static char KeyToChar(Keys key)
+    {
+        var keyboardstate = Keyboard.GetState();
+        bool isShiftPressed = keyboardstate.IsKeyDown(Keys.RightShift);
+        if (keyboardstate.CapsLock && isShiftPressed)
+        {
+            isShiftPressed = false;
+        }
+        else if (keyboardstate.CapsLock && !isShiftPressed)
+        {
+            isShiftPressed = true;
+        }
+        if (keyboardstate.IsKeyDown(Keys.OemQuotes) && isShiftPressed){
+            return '@';
+        }
+        if (keyboardstate.IsKeyDown(Keys.OemMinus) && isShiftPressed){
+            return '_';
+        }
+        // Determine the character based on key and shift pressed
+        switch (key)
+        {
+            case Keys.A:
+                return isShiftPressed ? 'A' : 'a';
+            case Keys.B:
+                return isShiftPressed ? 'B' : 'b';
+            case Keys.C:
+                return isShiftPressed ? 'C' : 'c';
+            case Keys.D:
+                return isShiftPressed ? 'D' : 'd';
+            case Keys.E:
+                return isShiftPressed ? 'E' : 'e';
+            case Keys.F:
+                return isShiftPressed ? 'F' : 'f';
+            case Keys.G:
+                return isShiftPressed ? 'G' : 'g';
+            case Keys.H:
+                return isShiftPressed ? 'H' : 'h';
+            case Keys.I:
+                return isShiftPressed ? 'I' : 'i';
+            case Keys.J:
+                return isShiftPressed ? 'J' : 'j';
+            case Keys.K:
+                return isShiftPressed ? 'K' : 'k';
+            case Keys.L:
+                return isShiftPressed ? 'L' : 'l';
+            case Keys.M:
+                return isShiftPressed ? 'M' : 'm';
+            case Keys.N:
+                return isShiftPressed ? 'N' : 'n';
+            case Keys.O:
+                return isShiftPressed ? 'O' : 'o';
+            case Keys.P:
+                return isShiftPressed ? 'P' : 'p';
+            case Keys.Q:
+                return isShiftPressed ? 'Q' : 'q';
+            case Keys.R:
+                return isShiftPressed ? 'R' : 'r';
+            case Keys.S:
+                return isShiftPressed ? 'S' : 's';
+            case Keys.T:
+                return isShiftPressed ? 'T' : 't';
+            case Keys.U:
+                return isShiftPressed ? 'U' : 'u';
+            case Keys.V:
+                return isShiftPressed ? 'V' : 'v';
+            case Keys.W:
+                return isShiftPressed ? 'W' : 'w';
+            case Keys.X:
+                return isShiftPressed ? 'X' : 'x';
+            case Keys.Y:
+                return isShiftPressed ? 'Y' : 'y';
+            case Keys.Z:
+                return isShiftPressed ? 'Z' : 'z';
+            case Keys.D0:
+                return isShiftPressed ? ')' : '0';
+            case Keys.D1:
+                return isShiftPressed ? '!' : '1';
+            case Keys.D2:
+                return isShiftPressed ? '"' : '2';
+            case Keys.D3:
+                return isShiftPressed ? '£' : '3';
+            case Keys.D4:
+                return isShiftPressed ? '$' : '4';
+            case Keys.D5:
+                return isShiftPressed ? '%' : '5';
+            case Keys.D6:
+                return isShiftPressed ? '^' : '6';
+            case Keys.D7:
+                return isShiftPressed ? '&' : '7';
+            case Keys.D8:
+                return isShiftPressed ? '*' : '8';
+            case Keys.D9:
+                return isShiftPressed ? '(' : '9';
+            case Keys.OemTilde:
+                return isShiftPressed ? '~' : '#';
+            case Keys.OemSemicolon:
+                return isShiftPressed ? ':' : ';';
+            case Keys.OemQuotes:
+                return isShiftPressed ? '@' : '\'';
+            case Keys.OemPipe:
+                return isShiftPressed ? '|' : '\\';
+            case Keys.OemOpenBrackets:
+                return isShiftPressed ? '{' : '[';
+            case Keys.OemCloseBrackets:
+                return isShiftPressed ? '}' : ']';
+            case Keys.OemComma:
+                return isShiftPressed ? '<' : ',';
+            case Keys.OemPeriod:
+                return isShiftPressed ? '>' : '.';
+            case Keys.OemMinus:
+                return isShiftPressed ? '_' : '-';
+            case Keys.OemPlus:
+                return isShiftPressed ? '+' : '=';
+            case Keys.OemQuestion:
+                return isShiftPressed ? '?' : '/';
+            default:
+                return ' ';
+        }
+    }
+
+    public void Update(float delta)
+    {
+        CheckSelected();
+        if (BoxSelected && Input.Count < MaxLength)
+        {
+            GetUserInput(delta);
+            AppendWithInput();
+        }
+    }
 }

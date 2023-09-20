@@ -32,43 +32,6 @@ class Sql
         }
         return result;
     }
-    public bool NewPlayerTbl(string Username, string Password)
-    {
-        var ExistingUsername = false;
-        var query = "Select PlayerID From [Player Tbl] where Username = @User";
-        using (SqlConnection con = new SqlConnection(connection))
-        {
-            con.Open();
-            using (SqlCommand command = new SqlCommand(query, con))
-            {
-                command.Parameters.AddWithValue("@user", Username);
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        ExistingUsername = true;
-                    }
-                }
-            }
-            con.Close();
-        }
-        if (!ExistingUsername)
-        {
-            query = "insert into [Player Tbl] (Username, Password) Values (@user, @pass);";
-            using (SqlConnection con = new SqlConnection(connection))
-            {
-                con.Open();
-                using (SqlCommand command = new SqlCommand(query, con))
-                {
-                    command.Parameters.AddWithValue("@user", Username);
-                    command.Parameters.AddWithValue("@pass", Password);
-                    command.ExecuteNonQuery();
-                }
-                con.Close();
-            }
-        }
-        return ExistingUsername;
-    }
     public void AddAchievment(string PlayerID, string AchievmentID)
     {
         //add a new entry for a achievment completed by a player.

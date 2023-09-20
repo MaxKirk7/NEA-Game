@@ -65,7 +65,7 @@ namespace NEAScreen
             Password = new InputBox("Fonts/TitleFont", "Enter Your Password...", con, sp, Game1.ScreenWidth / 2, 650, Color.Black, 1, 300, 100, 25);
             // only when signing up
             EmailBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 350);
-            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2, 350, Color.Black, 1, 300, 100, 15);
+            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2, 350, Color.Black, 0.6, 300, 100, 50);
         }
 
         public void Update(float delta)
@@ -76,14 +76,14 @@ namespace NEAScreen
                 if (SignUp.ButtonPressed())
                 {
                     SigningUp = true;
-                    Email.Update();
+                    Email.Update(delta);
                 }
 
                 SignIn.RemoveButton();
                 SignUp.RemoveButton();
                 Enter.AddButton();
-                Username.Update();
-                Password.Update();
+                Username.Update(delta);
+                Password.Update(delta);
                 if (Enter.ButtonPressed())
                 {
 
@@ -91,8 +91,7 @@ namespace NEAScreen
                     {
                         return; // Exit early if input is invalid
                     }
-
-                    // Continue with the rest of your code
+                    
                     var result = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
 
                     if (SignIn.ButtonPressed())
@@ -130,6 +129,7 @@ namespace NEAScreen
                                 string PlayerID = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput());
                                 SavedFile.Add($"PlayerID,{PlayerID}");
                                 LoginScreenQuery.AddAchievment(PlayerID, "1");
+
                                 ScreenOver = true;
                             }
                             else
@@ -201,7 +201,7 @@ namespace NEAScreen
                 valid = false;
             }
 
-            if (SigningUp)
+            if (SigningUp) // only checks if signingup
             {
                 if (string.IsNullOrEmpty(email) || !email.Contains('@'))
                 {
