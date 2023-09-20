@@ -162,7 +162,8 @@ namespace NEAScreen
                 Username.Draw();
                 PasswordBox.Draw();
                 Password.Draw();
-                if (SignUp.ButtonPressed())
+                //only draws email if signingup
+                if (SigningUp)
                 {
                     EmailBox.Draw();
                     Email.Draw();
