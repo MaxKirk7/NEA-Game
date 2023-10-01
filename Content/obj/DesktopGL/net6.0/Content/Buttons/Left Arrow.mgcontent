@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>d:/NEA/NEAGame/Content/Buttons/Left Arrow.png</SourceFile>
+  <SourceFile>D:/NEA/NEAGame/Content/Buttons/Left Arrow.png</SourceFile>
   <SourceTime>2023-08-01T13:37:05.8716094+01:00</SourceTime>
-  <DestFile>d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Left Arrow.xnb</DestFile>
-  <DestTime>2023-09-20T13:57:38.2788032+01:00</DestTime>
+  <DestFile>D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Buttons/Left Arrow.xnb</DestFile>
+  <DestTime>2023-09-28T13:54:30.2590039+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T12:44:56+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

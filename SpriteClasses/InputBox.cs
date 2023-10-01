@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Serilog;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +16,7 @@ class InputBox : TextBox
     private Rectangle rect;
     private readonly Queue Q = new(10);
     private float LastKeyPressTime = 0F;
-    private readonly float debounceDelay = 0.14f; //delay in seconds between recording keys
+    private readonly float debounceDelay = 0.18f; //delay in seconds between recording keys
     public InputBox(string FontLocation, string text, ContentManager con, SpriteBatch sp, int X, int Y, Color StringColor, double scale, int width, int height, int MaxLength) : base(FontLocation, text, con, sp, X, Y, StringColor, scale, width, height)
     {
         AllInputBoxes.Add(this);
@@ -89,30 +88,31 @@ class InputBox : TextBox
 
         foreach (Keys key in keyInputs)
         {
-            // Check if enough time has passed since the last key press
-            if (LastKeyPressTime >= debounceDelay)
+            if (key != Keys.LeftShift || key != Keys.RightShift)
             {
-                if (key != Keys.LeftShift || key != Keys.RightShift)
+                // Check if enough time has passed since the last key press
+                if (LastKeyPressTime >= debounceDelay)
                 {
+
                     Q.enQueue(key); // Add the key pressed to the queue
                     LastKeyPressTime = 0f; // Reset timeSinceLastKeyPress
                 }
             }
-
         }
-
         // Update timeSinceLastKeyPress
         LastKeyPressTime += delta;
     }
     private void AppendWithInput()
     {
         var key = Q.deQueue();
-        if (key == Keys.Back){
-            if (Input.Count > 0){
-                Input.RemoveAt(Input.Count-1);
+        if (key == Keys.Back)
+        {
+            if (Input.Count > 0)
+            {
+                Input.RemoveAt(Input.Count - 1);
             }
         }
-        if (key == Keys.None)
+        if (key == Keys.None || MaxLength == Input.Count())
         {
             return; // only workds with valid input
         }
@@ -120,7 +120,7 @@ class InputBox : TextBox
         if (CharKey != ' ')
         {
             Input.Add(CharKey);
-            Log.Information($"Input appended: {Input.Count()}");
+            Log.Information($"Input appended: {Input.Count}");
             Log.Information($"Key value = {CharKey}");
         }
     }
@@ -136,10 +136,12 @@ class InputBox : TextBox
         {
             isShiftPressed = true;
         }
-        if (keyboardstate.IsKeyDown(Keys.OemQuotes) && isShiftPressed){
+        if (keyboardstate.IsKeyDown(Keys.OemQuotes) && isShiftPressed)
+        {
             return '@';
         }
-        if (keyboardstate.IsKeyDown(Keys.OemMinus) && isShiftPressed){
+        if (keyboardstate.IsKeyDown(Keys.OemMinus) && isShiftPressed)
+        {
             return '_';
         }
         // Determine the character based on key and shift pressed
@@ -247,7 +249,7 @@ class InputBox : TextBox
     public void Update(float delta)
     {
         CheckSelected();
-        if (BoxSelected && Input.Count < MaxLength)
+        if (BoxSelected)
         {
             GetUserInput(delta);
             AppendWithInput();

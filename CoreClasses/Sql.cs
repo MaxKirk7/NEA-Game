@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
 namespace SQLQuery;
 class Sql
@@ -8,7 +11,7 @@ class Sql
     public Sql()
     {
     }
-    public string PlayerIDQuery(string Username = "null", string Password = "null")
+    public static string PlayerIDQuery(string Username = "null", string Password = "null")
     {
         var result = "null";
         var query = $"Select PlayerID From [Player Tbl] where Username = @User and Password = @Pass";
@@ -32,7 +35,7 @@ class Sql
         }
         return result;
     }
-    public void AddAchievment(string PlayerID, string AchievmentID)
+    public static void AddAchievment(string PlayerID, string AchievmentID)
     {
         //add a new entry for a achievment completed by a player.
         //if not already exists!
@@ -73,7 +76,7 @@ class Sql
         }
 
     }
-    public List<int> GetAvailableSkin(string PlayerID)
+    public static List<int> GetAvailableSkin(string PlayerID)
     {
         List<int> AchievementIDs = new List<int>();
         var PID = Int32.Parse(PlayerID);
@@ -100,7 +103,7 @@ class Sql
     }
 
 
-    public List<string> GetSkinLocation(string AchievementID)
+    public static List<string> GetSkinLocation(string AchievementID)
     {
         var AID = Int32.Parse(AchievementID);
         var Locations = new List<string>();
@@ -124,7 +127,7 @@ class Sql
         }
         return Locations;
     }
-    public bool CreateAccount(string Username, string Password, string Email)
+    public static bool CreateAccount(string Username, string Password, string Email)
     {
         bool newAccount = false;
         int newPlayerID = -1;
@@ -180,21 +183,111 @@ class Sql
                             newPlayerID = PlayerIDReader.GetInt32(0);
                         }
 
-                            // Insert into [Player Info Tbl] with the new PlayerID
-                            string createEmailQuery = "INSERT INTO [Player Info Tbl] (Email, PlayerID,NickName,DateCreated) VALUES (@Email, @PlayerID,@NickName,@DateCreated)";
-                            using (SqlCommand createEmailCommand = new SqlCommand(createEmailQuery, con))
-                            {
-                                var date = DateTime.Now.Date;
-                                createEmailCommand.Parameters.AddWithValue("@Email", Email);
-                                createEmailCommand.Parameters.AddWithValue("@PlayerID", newPlayerID);
-                                createEmailCommand.Parameters.AddWithValue("@NickName","Temp");
-                                createEmailCommand.Parameters.AddWithValue("@DateCreated", date);
-                                createEmailCommand.ExecuteNonQuery();
-                            }
+                        // Insert into [Player Info Tbl] with the new PlayerID
+                        string createEmailQuery = "INSERT INTO [Player Info Tbl] (Email, PlayerID,NickName,DateCreated) VALUES (@Email, @PlayerID,@NickName,@DateCreated)";
+                        using (SqlCommand createEmailCommand = new SqlCommand(createEmailQuery, con))
+                        {
+                            var date = DateTime.Now.Date;
+                            var NickName = Username.Substring(0, 4); // nickanme is first 4 leters of username
+                            createEmailCommand.Parameters.AddWithValue("@Email", Email);
+                            createEmailCommand.Parameters.AddWithValue("@PlayerID", newPlayerID);
+                            createEmailCommand.Parameters.AddWithValue("@NickName", NickName);
+                            createEmailCommand.Parameters.AddWithValue("@DateCreated", date);
+                            createEmailCommand.ExecuteNonQuery();
                         }
                     }
                 }
             }
+        }
         return newAccount;
+    }
+    public static List<List<string>> HighScores(string PlayerID)
+    {
+        var PID = Int32.Parse(PlayerID);
+        List<List<string>> Scores = new(6) { };
+        var HighScoreQuery = "use NEA select top 3 HighScore, NickName from [Player Info Tbl] where HighScore is not null order by HighScore desc;";
+        using (SqlConnection con = new SqlConnection(connection))
+        {
+            con.Open();
+            using (SqlCommand command = new(HighScoreQuery, con))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            List<string> tempscore = new() { };
+                            string HighScore = reader["HighScore"].ToString();
+                            string NickName = reader["NickName"].ToString();
+                            tempscore.Add(HighScore);
+                            tempscore.Add(NickName);
+                            Scores.Add(tempscore);
+                        }
+                    }
+                }
+            }
+            con.Close();
+        }
+        //make sure the list has full amount of values
+        if (Scores.Count < 3)
+        {
+            for (int i = Scores.Count - 1; i < 3; i++)
+            {
+                Scores[i] = null;
+            }
+        }
+        //weekly scores
+        var WeeklyQuery = "use NEA select top 2 WeeklyHighScore, Nickname [Player Info Tbl] where WeeklyHighScore is not null order by desc;";
+        using (SqlConnection con = new(connection))
+        {
+            using (SqlCommand command = new(WeeklyQuery, con))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            List<string> tempscore = new() { };
+                            string Weekly = reader["WeeklyHighScore"].ToString();
+                            string NickName = reader["NickName"].ToString();
+                            tempscore.Add(Weekly);
+                            tempscore.Add(NickName);
+                            Scores.Add(tempscore);
+                        }
+                    }
+                }
+            }
+        }
+        if (Scores.Count < 5)
+        {
+            for (int i = Scores.Count - 1; i < 5; i++)
+            {
+                Scores[i] = null;
+            }
+        }
+        var Personal = "use NEA select HighScore , NickName from [Player Info Tbl] where PlayerID = @PlayerID and HighScore is not null";
+        using (SqlConnection con = new(connection)){
+            using (SqlCommand command = new(Personal)){
+                command.Parameters.AddWithValue("@PlayerID",PID);
+                using (SqlDataReader reader = command.ExecuteReader()){
+                    if (reader.HasRows){
+                        while (reader.Read()){
+                                                        List<string> tempscore = new() { };
+                            string HighScore = reader["HighScore"].ToString();
+                            string NickName = reader["NickName"].ToString();
+                            tempscore.Add(HighScore);
+                            tempscore.Add(NickName);
+                            Scores.Add(tempscore);
+                        }
+                    }
+                }
+            }
+        }
+        if (Scores.Count < 6){
+            Scores[6] = null;
+        }
+        return Scores;
     }
 }

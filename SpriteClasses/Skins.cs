@@ -13,7 +13,7 @@ namespace _Sprites
         public Skin(int ID)
         {
             AchievementID = ID;
-            var Locations = Query.GetSkinLocation(AchievementID.ToString());
+            var Locations = Sql.GetSkinLocation(AchievementID.ToString());
             BaseSkin = Locations[0];
             FlyingSkin = Locations[1];
         }

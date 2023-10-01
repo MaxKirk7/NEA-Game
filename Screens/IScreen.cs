@@ -6,7 +6,7 @@ namespace NEAScreen{
     interface IScreen{
         void LoadContent(ContentManager con, SpriteBatch sp);
 
-        void Update(float delta);
+        abstract void Update(float delta);
 
         void Draw(SpriteBatch sp);
 

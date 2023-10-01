@@ -13,7 +13,6 @@ namespace NEAScreen
     class LoginScreen : IScreen
     {
         private bool ScreenOver = false;
-        private readonly Sql LoginScreenQuery = new();
         private Button SignUp;
         private Button SignIn;
         private Button Enter;
@@ -65,7 +64,7 @@ namespace NEAScreen
             Password = new InputBox("Fonts/TitleFont", "Enter Your Password...", con, sp, Game1.ScreenWidth / 2, 650, Color.Black, 1, 300, 100, 25);
             // only when signing up
             EmailBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 350);
-            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2, 350, Color.Black, 0.6, 300, 100, 50);
+            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2 - 50, 350, Color.Black, 0.8, 300, 100, 50);
         }
 
         public void Update(float delta)
@@ -87,60 +86,58 @@ namespace NEAScreen
                 if (Enter.ButtonPressed())
                 {
 
-                    if (!IsValidInput())
+                    if (IsValidInput())
                     {
-                        return; // Exit early if input is invalid
-                    }
-                    
-                    var result = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
 
-                    if (SignIn.ButtonPressed())
-                    {
-                        // Handle sign-in logic
-                        if (result == "null")
+
+                        var result = Sql.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
+                        if (SignIn.ButtonPressed())
                         {
-                            Username.ChangeText("Invalid Username Or password");
-                            Password.ChangeText("Re-Enter Details");
-                        }
-                        else
-                        {
-                            // Handle successful sign-in logic
-                            if (SavedFile.Count == 0)
+                            // Handle sign-in logic
+                            if (result == "null")
                             {
-                                SavedFile.Add($"PlayerID,{result}");
+                                Username.ChangeText("Invalid Username Or password");
+                                Password.ChangeText("Re-Enter Details");
                             }
                             else
                             {
-                                SavedFile[0] = $"PlayerID,{result}";
-                            }
-                            ScreenOver = true;
-                        }
-                    }
-                    else
-                    {
-                        // Handle sign-up logic
-                        if (result == "null")
-                        {
-                            //log error here
-                            var NewAccount = LoginScreenQuery.CreateAccount(Username.GetInput(), Password.GetInput(), Email.GetInput());
-                            //end error
-                            if (NewAccount) // if the account details are new
-                            {
-                                string PlayerID = LoginScreenQuery.PlayerIDQuery(Username.GetInput(), Password.GetInput());
-                                SavedFile.Add($"PlayerID,{PlayerID}");
-                                LoginScreenQuery.AddAchievment(PlayerID, "1");
-
+                                // Handle successful sign-in logic
+                                if (SavedFile.Count == 0)
+                                {
+                                    SavedFile.Add($"PlayerID,{result}");
+                                }
+                                else
+                                {
+                                    SavedFile[0] = $"PlayerID,{result}";
+                                }
                                 ScreenOver = true;
                             }
-                            else
-                            {
-                                Username.ChangeText("Username May already Exists");
-                                Email.ChangeText("Email May already Exist");
-                            }
                         }
                         else
                         {
-                            Username.ChangeText("Username already Exists");
+                            // Handle sign-up logic
+                            if (result == "null")
+                            {
+                                //log error here
+                                var NewAccount = Sql.CreateAccount(Username.GetInput(), Password.GetInput(), Email.GetInput());
+                                //end error
+                                if (NewAccount) // if the account details are new
+                                {
+                                    string PlayerID = Sql.PlayerIDQuery(Username.GetInput(), Password.GetInput());
+                                    SavedFile.Add($"PlayerID,{PlayerID}");
+                                    Sql.AddAchievment(PlayerID, "1");
+                                    ScreenOver = true;
+                                }
+                                else
+                                {
+                                    Username.ChangeText("Username May already Exists");
+                                    Email.ChangeText("Email May already Exist");
+                                }
+                            }
+                            else
+                            {
+                                Username.ChangeText("Username already Exists");
+                            }
                         }
                     }
                 }
@@ -176,6 +173,7 @@ namespace NEAScreen
         {
             if (ScreenOver)
             {
+
                 File.WriteAllLines("SavedInfo.txt", SavedFile);
                 Button.EndButtons();
             }

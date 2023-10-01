@@ -1,6 +1,8 @@
 d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Left Arrow.xnb
 d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Right Arrow.xnb
 d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Rounded Square Button.xnb
+d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Settings Cog.xnb
+d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Trophie.xnb
 d:\NEA\NEAGame\bin\Debug\net6.0\Content\Fonts\TitleFont.xnb
 d:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sounds\Loading.ogg
 d:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sounds\Loading.xnb

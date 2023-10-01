@@ -1,89 +1,132 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NEAScreen;
 using Serilog;
-using Serilog.Sinks.SystemConsole;
 
-namespace NEAGame;
-
-public class Game1 : Game
+namespace NEAGame
 {
-    private readonly List<IScreen> AllScreens = new() { new LoadingScreen(), new LoginScreen(), new HomeScreen() };//more screens to be added
-    private ScreenManager screens;
-    private readonly GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    public const int ScreenWidth = 1920;
-    public const int ScreenHeight = 1080;
-    public const int Frames = 60;
-
-    public Game1()
+    public class Game1 : Game
     {
-        _graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
-        IsMouseVisible = true;
-        Window.IsBorderless = true;
-        Window.AllowUserResizing = false;
-        _graphics.PreferredBackBufferHeight = ScreenHeight/2;
-        _graphics.PreferredBackBufferWidth = ScreenWidth;
-        IsFixedTimeStep = true;
-        TargetElapsedTime = System.TimeSpan.FromSeconds(1.0 / Frames);
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateLogger();
-    }
+        //by using dictionary screens are only generated when needed/ used
+        private readonly Dictionary<Type , Lazy<IScreen>> MainScreens = new Dictionary<Type, Lazy<IScreen>>(){//https://learn.microsoft.com/en-us/dotnet/api/system.lazy-1?view=net-7.0
+            {typeof(LoadingScreen),new Lazy<IScreen>(() => new LoadingScreen())},
+            {typeof(HomeScreen),new Lazy<IScreen>(() => new HomeScreen())},
+            {typeof(LoginScreen),new Lazy<IScreen>(() => new LoginScreen())}
+        };
+        private ScreenManager screens;
+        private readonly GraphicsDeviceManager _graphics;
+        private static SpriteBatch _spriteBatch;
+        private static ContentManager Con;
+        public const int ScreenWidth = 1920;
+        public const int ScreenHeight = 1080;
+        public const int Frames = 60;
 
-    protected override void Initialize()
-    {
-        Window.Title = "NEA Game";
-        screens = new ScreenManager();
-        base.Initialize();
-    }
-
-    protected override void LoadContent()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-        screens.setScreen(AllScreens[1], Content, _spriteBatch);
-        // TODO: use this.Content to load your game content here
-    }
-
-    protected override void Update(GameTime gameTime)
-    {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-        if (screens.IsScreenOver())
+        public Game1()
         {
-            Log.Information($"{screens.currentScreen()}: Screen Over");
-            var IndexCurrentScreen = AllScreens.IndexOf(screens.currentScreen());
-            if (IndexCurrentScreen + 1 < AllScreens.Count) //stop the List from going out of its limit
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+            Window.IsBorderless = false;
+            Window.AllowUserResizing = false;
+            _graphics.PreferredBackBufferHeight = ScreenHeight;
+            _graphics.PreferredBackBufferWidth = ScreenWidth;
+            IsFixedTimeStep = true;
+            TargetElapsedTime = TimeSpan.FromSeconds(1.0 / Frames);
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+        }
+
+        protected override void Initialize()
+        {
+            Window.Title = "NEA Game";
+            screens = new ScreenManager();
+            Con = Content;
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            // Load the initial screen lazily
+            var initialScreenType = typeof(LoadingScreen); // initial screen
+            screens.setScreen(MainScreens[initialScreenType].Value, Con, _spriteBatch);
+            // TODO: use this.Content to load your game content here
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000F;
+            screens.Update(delta);
+
+            if (screens.IsScreenOver())
             {
-                screens.setScreen((IScreen)AllScreens[IndexCurrentScreen + 1], Content, _spriteBatch);
+                Log.Information($"{screens.currentScreen()}: Screen Over");
+                var currentScreenType = screens.currentScreen().GetType();
+
+                // Determine the next screen type based on your game logic
+                var nextScreenType = GetNextScreenType(currentScreenType); //logic for next screen
+
+                if (MainScreens.TryGetValue(nextScreenType, out var nextScreen))
+                {
+                    screens.setScreen(nextScreen.Value, Con, _spriteBatch);
+                }
+                else
+                {
+                    Exit();
+                }
+            }
+
+            // TODO: Add your update logic here
+            Content = Con;
+            base.Update(gameTime);
+        }
+
+        // logic to switch screens
+        private Type GetNextScreenType(Type current){
+            if (current == typeof(LoadingScreen)){
+                return typeof(LoginScreen);
+            }
+            else if (current == typeof(LoginScreen)){
+                return typeof(HomeScreen);
+            }
+            else if (current == typeof(HomeScreen)){
+                return null;
             }
             else{
-                //End Of game logic to be added
+                return typeof(LoginScreen);
             }
         }
 
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+            screens.Draw(_spriteBatch);
+            // TODO: Add your drawing code here
 
-        var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000F;
-        screens.Update(delta);
+            base.Draw(gameTime);
+        }
 
-        // TODO: Add your update logic here
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+        }
 
-        base.Update(gameTime);
-    }
+        public static SpriteBatch GetSpriteBatch()
+        {
+            return _spriteBatch;
+        }
 
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.Black);
-        screens.Draw(_spriteBatch);
-        // TODO: Add your drawing code here
-
-        base.Draw(gameTime);
-    }
-    protected override void UnloadContent()
-    {
-        base.UnloadContent();
+        public static ContentManager GetContentManager()
+        {
+            return Con;
+        }
     }
 }
