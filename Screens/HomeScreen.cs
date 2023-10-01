@@ -14,6 +14,7 @@ class HomeScreen : IScreen
     private readonly List<IScreen> HomeScreens = new() { new MainHomeScreen(), new LeaderBoardHomeScreen() };
     private ScreenManager HomeScreenManager;
     private static readonly List<string> SavedFile = new();
+    private static Skin? activeSkin;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
         HomeScreenManager = new ScreenManager();
@@ -53,7 +54,8 @@ class HomeScreen : IScreen
                     Log.Information("LeaderboardScreen");
                     //End Of game logic to be added
                 }
-                else if(InstanceHomeScreen.IsSettingsSelected()){
+                else if (InstanceHomeScreen.IsSettingsSelected())
+                {
                     ScreenOver = false;
                     HomeScreenManager.setScreen(HomeScreens[0], Game1.GetContentManager(), Game1.GetSpriteBatch());
                     Log.Information("Setttings");
@@ -61,7 +63,7 @@ class HomeScreen : IScreen
             }
             else if (IndexCurrentScreen != 0)
             { // if the user selects back button ever go back to the main screen
-            Log.Information("Finsihed LeaderBoard");
+                Log.Information("Finsihed LeaderBoard");
                 ScreenOver = false;
                 HomeScreenManager.setScreen(HomeScreens[0], Game1.GetContentManager(), Game1.GetSpriteBatch());
             }
@@ -79,6 +81,15 @@ class HomeScreen : IScreen
     {
         if (ScreenOver)
         {
+            activeSkin = MainHomeScreen.GetActiveSkin();
+            if (SavedFile.Count > 1)
+            {
+                SavedFile[1] = $"Skin,{activeSkin.BaseSkin}";
+            }
+            else
+            {
+                SavedFile.Add($"Skin,{activeSkin.BaseSkin}");
+            }
             using FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Write);
             using StreamWriter writer = new(stream);
             foreach (string s in SavedFile)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using _Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -16,14 +17,14 @@ class MainHomeScreen : IScreen
     private bool LeaderBoardSelected = false;
     private bool SettingsSelected = false;
     private readonly Sql Query = new();
-    private readonly List<Skin> AvailableSkins = new();
+    private static readonly List<Skin> AvailableSkins = new();
     private readonly List<string> SavedFile = HomeScreen.saveFile();
     private Sprite CurrentSkin;
     private BlankBox SkinBackGround;
     private TextBox test;
     private Button LeftArrow;
     private Button RightArrow;
-    private int ActiveSkinIndex;
+    private static int ActiveSkinIndex;
     private Button PlayGame;
     private Button NewGame;
     private Button LeaderBoard;
@@ -46,7 +47,7 @@ class MainHomeScreen : IScreen
         LeaderBoard = new("Fonts/TitleFont", "", con, sp, 1850, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
         LeaderBoardSymbol = new("Buttons/Trophie", con, sp, 75, 75, 1849, 978);
         Settings = new("Fonts/TitleFont", "", con, sp, 300, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
-        SettingsSymbol = new("Buttons/Settings Cog",con,sp,75,75,299,978);
+        SettingsSymbol = new("Buttons/Settings Cog", con, sp, 75, 75, 299, 978);
         //initilaise skin values to the list if they are 'unlocked'
         foreach (int ID in SkinIds)
         {
@@ -118,7 +119,8 @@ class MainHomeScreen : IScreen
             ScreenOver = true;
             LeaderBoardSelected = true;
         }
-        if (Settings.ButtonPressed()){
+        if (Settings.ButtonPressed())
+        {
             ScreenOver = true;
             SettingsSelected = true;
         }
@@ -154,9 +156,18 @@ class MainHomeScreen : IScreen
         LeaderBoardSelected = false;
         return Selected;
     }
-    public bool IsSettingsSelected(){
+    public bool IsSettingsSelected()
+    {
         var Selected = SettingsSelected;
         SettingsSelected = false;
         return Selected;
+    }
+    public static Skin GetActiveSkin()
+    {
+        if (AvailableSkins.Count > 0)
+        {
+            return AvailableSkins[ActiveSkinIndex];
+        }
+        return null;
     }
 }

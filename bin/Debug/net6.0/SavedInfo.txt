@@ -1,1 +1,2 @@
 PlayerID,1064
+Skin,Player/Skins/Base/Base Skin

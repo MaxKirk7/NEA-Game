@@ -15,7 +15,8 @@ namespace NEAGame
         private readonly Dictionary<Type , Lazy<IScreen>> MainScreens = new Dictionary<Type, Lazy<IScreen>>(){//https://learn.microsoft.com/en-us/dotnet/api/system.lazy-1?view=net-7.0
             {typeof(LoadingScreen),new Lazy<IScreen>(() => new LoadingScreen())},
             {typeof(HomeScreen),new Lazy<IScreen>(() => new HomeScreen())},
-            {typeof(LoginScreen),new Lazy<IScreen>(() => new LoginScreen())}
+            {typeof(LoginScreen),new Lazy<IScreen>(() => new LoginScreen())},
+            {typeof(MainGame),new Lazy<IScreen>(() => new MainGame())}
         };
         private ScreenManager screens;
         private readonly GraphicsDeviceManager _graphics;
@@ -53,7 +54,7 @@ namespace NEAGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             // Load the initial screen lazily
-            var initialScreenType = typeof(LoadingScreen); // initial screen
+            var initialScreenType = typeof(MainGame); // initial screen
             screens.setScreen(MainScreens[initialScreenType].Value, Con, _spriteBatch);
             // TODO: use this.Content to load your game content here
         }
@@ -98,7 +99,7 @@ namespace NEAGame
                 return typeof(HomeScreen);
             }
             else if (current == typeof(HomeScreen)){
-                return null;
+                return typeof(MainGame);
             }
             else{
                 return typeof(LoginScreen);
