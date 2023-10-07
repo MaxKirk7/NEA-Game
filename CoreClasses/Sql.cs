@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
+using NEAGameObjects;
 namespace SQLQuery;
 class Sql
 {
@@ -268,13 +266,18 @@ class Sql
             }
         }
         var Personal = "use NEA select HighScore , NickName from [Player Info Tbl] where PlayerID = @PlayerID and HighScore is not null";
-        using (SqlConnection con = new(connection)){
-            using (SqlCommand command = new(Personal)){
-                command.Parameters.AddWithValue("@PlayerID",PID);
-                using (SqlDataReader reader = command.ExecuteReader()){
-                    if (reader.HasRows){
-                        while (reader.Read()){
-                                                        List<string> tempscore = new() { };
+        using (SqlConnection con = new(connection))
+        {
+            using (SqlCommand command = new(Personal))
+            {
+                command.Parameters.AddWithValue("@PlayerID", PID);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            List<string> tempscore = new() { };
                             string HighScore = reader["HighScore"].ToString();
                             string NickName = reader["NickName"].ToString();
                             tempscore.Add(HighScore);
@@ -285,9 +288,33 @@ class Sql
                 }
             }
         }
-        if (Scores.Count < 6){
+        if (Scores.Count < 6)
+        {
             Scores[6] = null;
         }
         return Scores;
+    }
+    public static int GetScore(string PlayerID)
+    {
+        int Value = 0;
+        int PID = Int32.Parse(PlayerID);
+        var Query = "use NEA select HighScore from [Player Info Tbl] where PlayerID = @PlayerID and HighScore is not null";
+        using (SqlConnection con = new SqlConnection(connection))
+        {
+            con.Open();
+            using (SqlCommand command = new SqlCommand(Query, con))
+            {
+                command.Parameters.AddWithValue("@PlayerID", PID);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        Value = reader.GetInt32(0);
+                    }
+                }
+            }
+            con.Close();
+        }
+        return Value;
     }
 }

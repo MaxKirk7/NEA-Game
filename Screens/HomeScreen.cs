@@ -14,7 +14,7 @@ class HomeScreen : IScreen
     private readonly List<IScreen> HomeScreens = new() { new MainHomeScreen(), new LeaderBoardHomeScreen() };
     private ScreenManager HomeScreenManager;
     private static readonly List<string> SavedFile = new();
-    private static Skin? activeSkin;
+    private static Skin activeSkin;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
         HomeScreenManager = new ScreenManager();

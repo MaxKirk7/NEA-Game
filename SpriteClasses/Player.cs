@@ -1,25 +1,24 @@
 using System;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NEAGame;
 using NEAScreen;
+using Serilog;
 
 namespace NEAGameObjects;
 class Player
 {
-    private static float TeleportDelay = 0;
+    private static readonly float ShotDelay = 0.4f;
+    private static float ShotElapsed;
+    private static readonly float TeleportDelay = 10;
     private static float TeleportElapsedTime = 10;
     private static Rectangle rect;
-    private static Texture2D texture = Game1.GetContentManager().Load<Texture2D>(MainGame.saveFile()[1].Replace("Skin,", ""));
-    private static Vector2 Size = new Vector2(100, 125);
-    private static Vector2 Position = new Vector2(Game1.ScreenWidth / 2 - Size.X / 2, Game1.ScreenHeight / 2 - Size.X / 2); //centre screen start
-    private static double RadianTurnSpeed = 2.5 * (Math.PI / 180); //speed the player will rotate
-    private static double UnitCircleValue = 0; // direction the player will move
-    public Player()
-    {
-    }
+    private static readonly Texture2D texture = Game1.GetContentManager().Load<Texture2D>(MainGame.saveFile()[1].Replace("Skin,", ""));
+    private static Vector2 Size = new Vector2(texture.Height,texture.Height) / 4;
+    private static Vector2 Position = new(Game1.ScreenWidth / 2 - Size.X / 2, Game1.ScreenHeight / 2 - Size.X / 2); //centre screen start
+    private static readonly double RadianTurnSpeed = 2.5 * (Math.PI / 180); //speed the player will rotate
+    private static double UnitCircleValue = 0; // direction the player will move/ face
     private static void Move(float delta)
     {
         var KeyBoard = Keyboard.GetState();
@@ -62,12 +61,22 @@ class Player
         {
             if (TeleportElapsedTime > TeleportDelay)
             {
-                Position.Y = new Random().Next(Game1.ScreenHeight * 3/ 12, Game1.ScreenHeight * 9 / 12);
+                Position.Y = new Random().Next(Game1.ScreenHeight * 3 / 12, Game1.ScreenHeight * 9 / 12);
                 Position.X = new Random().Next(Game1.ScreenWidth * 3 / 12, Game1.ScreenWidth * 9 / 12);
                 TeleportElapsedTime = 0;
             }
         }
+        if (KeyBoard.IsKeyDown(Keys.Space))
+        {
+            if (ShotDelay < ShotElapsed)
+            {
+                Shoot();
+                Log.Information("Shoot");
+                ShotElapsed = 0;
+            }
+        }
         TeleportElapsedTime += delta;
+        ShotElapsed += delta;
     }
 
     public static void Update(float delta)
@@ -76,8 +85,29 @@ class Player
     }
     public static void Draw(SpriteBatch sp)
     {
+
+        // Create the rect based on the rotated position
         rect = new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y);
-        var origin = rect.Center.ToVector2() / 3;
-        sp.Draw(texture, rect, null, Color.White, (float)UnitCircleValue, origin, SpriteEffects.None, 0f);
+
+        // Define the source rect (if needed)
+        var rect2 = new Rectangle(0, 0, texture.Width, texture.Height);
+
+        // Calculate the origin for rotation
+        var origin = new Vector2(rect2.Width / 2, rect2.Height / 2);
+
+        // Draw the texture with rotation
+        sp.Draw(texture, rect, rect2, Color.White, (float)UnitCircleValue, origin, SpriteEffects.None, 0f);
+    }
+    public static bool IsHit(Rectangle obj)
+    {
+        Rectangle Hitbox = new Rectangle(rect.X,rect.Y,rect.Width - 4 , rect.Height -4);
+        Rectangle ObjHitbox = new(obj.X, obj.Y, obj.Width-2, obj.Height-2);
+        //ObjHitbox.Offset(2, 2);
+        return Hitbox.Intersects(ObjHitbox);
+    }
+    public static void Shoot()
+    {
+        Vector2 bulletStartPosition = Position;
+        Bullets.Shoot(bulletStartPosition, UnitCircleValue);
     }
 }

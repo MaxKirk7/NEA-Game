@@ -8,5 +8,9 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "D:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sounds/Loading.xnb","SongProcessor","SongContent",215919,125,0.9158372
 "D:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sprites/BackGroundSpace.xnb","TextureProcessor","Texture2DContent",53776,896517,0.0812147
 "D:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sprites/Moon.xnb","TextureProcessor","Texture2DContent",262563,559585,0.0369168
+"D:/NEA/NEAGame/Content/Player/Asteroid/Asteroid.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Asteroid/Asteroid.xnb","TextureProcessor","Texture2DContent",192755,3157733,0.4688123
+"D:/NEA/NEAGame/Content/Player/Bullet/Bullet.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Bullet/Bullet.xnb","TextureProcessor","Texture2DContent",1946,6553685,0.3778501
 "D:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Base Skin.xnb","TextureProcessor","Texture2DContent",16597,1208485,0.0703566
+"D:/NEA/NEAGame/Content/Player/Skins/Base/Best Ship.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Best Ship.xnb","TextureProcessor","Texture2DContent",44664,201457,0.3055023
+"D:/NEA/NEAGame/Content/Player/Skins/Base/Second Best.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Second Best.xnb","TextureProcessor","Texture2DContent",104941,512725,0.0622297
 "D:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Moving/Base Fly.xnb","TextureProcessor","Texture2DContent",17629,1208485,0.0460641

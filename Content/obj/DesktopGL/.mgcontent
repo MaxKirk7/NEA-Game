@@ -13,10 +13,18 @@
     <File>D:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3</File>
     <File>D:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp</File>
     <File>D:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png</File>
+    <File>D:/NEA/NEAGame/Content/Player/Asteroid/Asteroid.png</File>
+    <File>D:/NEA/NEAGame/Content/Player/Bullet/Bullet.png</File>
     <File>D:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png</File>
+    <File>D:/NEA/NEAGame/Content/Player/Skins/Base/Best Ship.png</File>
+    <File>D:/NEA/NEAGame/Content/Player/Skins/Base/Second Best.png</File>
     <File>D:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -12,6 +12,8 @@ using SQLQuery;
 namespace NEAScreen;
 class MainHomeScreen : IScreen
 {
+    private double ButtonElapsedTime = 0;
+    private double ButtonPressDelay = 0.2;
     private bool ScreenOver = false;
     //Skins need to be loaded from database
     private bool LeaderBoardSelected = false;
@@ -77,33 +79,39 @@ class MainHomeScreen : IScreen
     public void Update(float delta)
     {
         Button.Update();
-        if (LeftArrow.ButtonPressed())
+        if (ButtonPressDelay < ButtonElapsedTime)
         {
-            //logic for going left by one in the List AvailableSkins
-            //if the current skin is not in position 0
-            if (ActiveSkinIndex > 0)
+
+            if (LeftArrow.ButtonPressed())
             {
-                ActiveSkinIndex--;
+                //logic for going left by one in the List AvailableSkins
+                //if the current skin is not in position 0
+                if (ActiveSkinIndex > 0)
+                {
+                    ActiveSkinIndex--;
+                }
+                else
+                {
+                    ActiveSkinIndex = AvailableSkins.Count - 1;
+                }
+                CurrentSkin.ChangeTexture(AvailableSkins[ActiveSkinIndex].BaseSkin);
+                ButtonElapsedTime = 0;
             }
-            else
+            if (RightArrow.ButtonPressed())
             {
-                ActiveSkinIndex = AvailableSkins.Count - 1;
+                //logic for going right by one in the List AvailableSkins
+                //if the current skin is not in largest position
+                if (ActiveSkinIndex < AvailableSkins.Count - 1)
+                {
+                    ActiveSkinIndex++;
+                }
+                else
+                {
+                    ActiveSkinIndex = 0;
+                }
+                CurrentSkin.ChangeTexture(AvailableSkins[ActiveSkinIndex].BaseSkin);
+                ButtonElapsedTime = 0;
             }
-            CurrentSkin.ChangeTexture(AvailableSkins[ActiveSkinIndex].BaseSkin);
-        }
-        if (RightArrow.ButtonPressed())
-        {
-            //logic for going right by one in the List AvailableSkins
-            //if the current skin is not in largest position
-            if (ActiveSkinIndex < AvailableSkins.Count - 1)
-            {
-                ActiveSkinIndex++;
-            }
-            else
-            {
-                ActiveSkinIndex = 0;
-            }
-            CurrentSkin.ChangeTexture(AvailableSkins[ActiveSkinIndex].BaseSkin);
         }
         if (PlayGame.ButtonPressed())
         {
@@ -124,6 +132,7 @@ class MainHomeScreen : IScreen
             ScreenOver = true;
             SettingsSelected = true;
         }
+        ButtonElapsedTime += delta;
     }
     public void Draw(SpriteBatch sp)
     {
