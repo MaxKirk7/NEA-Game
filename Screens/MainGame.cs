@@ -10,6 +10,11 @@ using SQLQuery;
 namespace NEAScreen;
 class MainGame : IScreen
 {
+    private const float ImmunityTime = 2;
+    private float ImmunityElapsedTime = 10;
+    private int Lives = 3;
+    private bool RoundOver = false;
+    private bool GameOver = false;
     private Texture2D BulletTexture;
     private Texture2D AsteroidTexture;
     private bool IsDead = false;
@@ -28,9 +33,13 @@ class MainGame : IScreen
                     SavedFile.Add(line);
                 }
             }
+            if (SavedFile.Count < 3)
+            {
+                SavedFile.Add("GamesPlayed,0");
+            }
         }
-        CurrentScore = Sql.GetScore(SavedFile[0].Replace("PlayerID,", ""));
-        Score = new("Fonts/TitleFont", CurrentScore.ToString(), con, sp, 10, 30, Color.Red, 3f);
+        CurrentScore = Sql.GetAverageScore(SavedFile[0].Replace("PlayerID,", ""));
+        Score = new("Fonts/TitleFont", CurrentScore.ToString(), con, sp, 30, 30, Color.Red, 3f);
         BulletTexture = con.Load<Texture2D>("Player/Bullet/Bullet");
         Bullets.LoadTexture(BulletTexture);
         AsteroidTexture = con.Load<Texture2D>("Player/Asteroid/Asteroid");
@@ -40,7 +49,7 @@ class MainGame : IScreen
     public void Update(float delta)
     {
         Asteroids.Update(delta, CurrentScore);
-        if (!IsDead)
+        if (!RoundOver)
         {
             Player.Update(delta);
             Bullets.Update(delta);
@@ -62,9 +71,7 @@ class MainGame : IScreen
                     break;
                 }
             }
-            if (bulletDestroyed != null){
-                bulletDestroyed.Remove();
-            }
+            bulletDestroyed?.Remove();
             var AstHitBoxes = Asteroids.GetAsteroids();
             foreach (var ast in AstHitBoxes)
             {
@@ -81,6 +88,23 @@ class MainGame : IScreen
             }
         }
         Score.ChangeText(CurrentScore.ToString());
+        if (IsDead)
+        {
+            ImmunityElapsedTime += delta;
+            if (ImmunityElapsedTime >= ImmunityTime)
+            {
+                var Games = SavedFile[2].Split(",");
+                SavedFile[2] = SavedFile[2].Replace(Games[1], (int.Parse(Games[1]) + 1).ToString());
+                Sql.UpdateScore(SavedFile, CurrentScore);
+                IsDead = false;
+                Lives--;
+                ImmunityElapsedTime = 0;
+            }
+        }
+        if (Lives < 0)
+        {
+            RoundOver = true;
+        }
     }
     public void Draw(SpriteBatch sp)
     {

@@ -20,7 +20,7 @@ class MainHomeScreen : IScreen
     private bool SettingsSelected = false;
     private readonly Sql Query = new();
     private static readonly List<Skin> AvailableSkins = new();
-    private readonly List<string> SavedFile = HomeScreen.saveFile();
+    private List<string> SavedFile = HomeScreen.saveFile();
     private Sprite CurrentSkin;
     private BlankBox SkinBackGround;
     private TextBox test;
@@ -119,7 +119,7 @@ class MainHomeScreen : IScreen
         }
         if (NewGame.ButtonPressed())
         {
-            //sql statement to reset the average score
+            SavedFile = Sql.ResetAverageScore(SavedFile);
             ScreenOver = true;
         }
         if (LeaderBoard.ButtonPressed())

@@ -54,7 +54,7 @@ namespace NEAGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             // Load the initial screen lazily
-            var initialScreenType = typeof(MainGame); // initial screen
+            var initialScreenType = typeof(LoginScreen); // initial screen
             screens.setScreen(MainScreens[initialScreenType].Value, Con, _spriteBatch);
             // TODO: use this.Content to load your game content here
         }
