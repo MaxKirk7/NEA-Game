@@ -1,16 +1,19 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/NEA/NEAGame/Content/Buttons/Left Arrow.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Left Arrow.xnb","TextureProcessor","Texture2DContent",10084,448285,0.3770748
-"D:/NEA/NEAGame/Content/Buttons/Right Arrow.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Right Arrow.xnb","TextureProcessor","Texture2DContent",12059,448285,0.0584241
-"D:/NEA/NEAGame/Content/Buttons/Rounded Square Button.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Rounded Square Button.xnb","TextureProcessor","Texture2DContent",9571,246001,0.016917
-"D:/NEA/NEAGame/Content/Buttons/Settings Cog.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Settings Cog.xnb","TextureProcessor","Texture2DContent",25237,303677,0.3356013
-"D:/NEA/NEAGame/Content/Buttons/Trophie.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Trophie.xnb","TextureProcessor","Texture2DContent",30738,1048661,0.0562232
-"D:/NEA/NEAGame/Content/Fonts/TitleFont.spritefont","D:/NEA/NEAGame/Content/bin/DesktopGL/Fonts/TitleFont.xnb","FontDescriptionProcessor","SpriteFontContent",2069,21535,0.2541652
-"D:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sounds/Loading.xnb","SongProcessor","SongContent",215919,125,0.9158372
-"D:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sprites/BackGroundSpace.xnb","TextureProcessor","Texture2DContent",53776,896517,0.0812147
-"D:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sprites/Moon.xnb","TextureProcessor","Texture2DContent",262563,559585,0.0369168
-"D:/NEA/NEAGame/Content/Player/Asteroid/Asteroid.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Asteroid/Asteroid.xnb","TextureProcessor","Texture2DContent",192755,3157733,0.4688123
-"D:/NEA/NEAGame/Content/Player/Bullet/Bullet.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Bullet/Bullet.xnb","TextureProcessor","Texture2DContent",1946,6553685,0.3778501
-"D:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Base Skin.xnb","TextureProcessor","Texture2DContent",16597,1208485,0.0703566
-"D:/NEA/NEAGame/Content/Player/Skins/Base/Best Ship.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Best Ship.xnb","TextureProcessor","Texture2DContent",44664,201457,0.3055023
-"D:/NEA/NEAGame/Content/Player/Skins/Base/Second Best.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Second Best.xnb","TextureProcessor","Texture2DContent",104941,512725,0.0622297
-"D:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Moving/Base Fly.xnb","TextureProcessor","Texture2DContent",17629,1208485,0.0460641
+"D:/NEA/NEAGame/Content/Buttons/Left Arrow.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Left Arrow.xnb","TextureProcessor","Texture2DContent",10084,448285,0.4345432
+"D:/NEA/NEAGame/Content/Buttons/Right Arrow.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Right Arrow.xnb","TextureProcessor","Texture2DContent",12059,448285,0.0820914
+"D:/NEA/NEAGame/Content/Buttons/Rounded Square Button.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Rounded Square Button.xnb","TextureProcessor","Texture2DContent",9571,246001,0.0526759
+"D:/NEA/NEAGame/Content/Buttons/Settings Cog.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Settings Cog.xnb","TextureProcessor","Texture2DContent",25237,303677,0.0463002
+"D:/NEA/NEAGame/Content/Buttons/Trophie.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Buttons/Trophie.xnb","TextureProcessor","Texture2DContent",30738,1048661,0.0837317
+"D:/NEA/NEAGame/Content/Fonts/TitleFont.spritefont","D:/NEA/NEAGame/Content/bin/DesktopGL/Fonts/TitleFont.xnb","FontDescriptionProcessor","SpriteFontContent",2069,21535,0.2384801
+"D:/NEA/NEAGame/Content/Key Media/GameMusic.mp3","D:/NEA/NEAGame/Content/bin/DesktopGL/Key Media/GameMusic.xnb","SongProcessor","SongContent",1275579,127,3.401686
+"D:/NEA/NEAGame/Content/Key Media/Shot.wav","D:/NEA/NEAGame/Content/bin/DesktopGL/Key Media/Shot.xnb","SoundEffectProcessor","SoundEffectContent",205134,205161,0.6527202
+"D:/NEA/NEAGame/Content/LoadingScreen/Sounds/IntroSong.mp3","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sounds/IntroSong.xnb","SongProcessor","SongContent",121906,127,1.086624
+"D:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sounds/Loading.xnb","SongProcessor","SongContent",215919,125,0.7771814
+"D:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sprites/BackGroundSpace.xnb","TextureProcessor","Texture2DContent",53776,896517,0.0539408
+"D:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png","D:/NEA/NEAGame/Content/bin/DesktopGL/LoadingScreen/Sprites/Moon.xnb","TextureProcessor","Texture2DContent",262563,559585,0.0522751
+"D:/NEA/NEAGame/Content/Player/Asteroid/Asteroid.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Asteroid/Asteroid.xnb","TextureProcessor","Texture2DContent",192755,3157733,0.1614276
+"D:/NEA/NEAGame/Content/Player/Bullet/Bullet.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Bullet/Bullet.xnb","TextureProcessor","Texture2DContent",1946,6553685,0.3044904
+"D:/NEA/NEAGame/Content/Player/Skins/Base/Base Skin.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Base Skin.xnb","TextureProcessor","Texture2DContent",16597,1208485,0.0652027
+"D:/NEA/NEAGame/Content/Player/Skins/Base/Best Ship.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Best Ship.xnb","TextureProcessor","Texture2DContent",44664,201457,0.0398254
+"D:/NEA/NEAGame/Content/Player/Skins/Base/Second Best.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Base/Second Best.xnb","TextureProcessor","Texture2DContent",104941,512725,0.0480095
+"D:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png","D:/NEA/NEAGame/Content/bin/DesktopGL/Player/Skins/Moving/Base Fly.xnb","TextureProcessor","Texture2DContent",17629,1208485,0.0645918

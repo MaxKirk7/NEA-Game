@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>D:/NEA/NEAGame/Content/Key Media/Shot.wav</SourceFile>
+  <SourceTime>2023-11-02T11:49:25.8251311+00:00</SourceTime>
+  <DestFile>D:/NEA/NEAGame/Content/bin/DesktopGL/Content/Key Media/Shot.xnb</DestFile>
+  <DestTime>2023-11-02T11:52:40.4498078+00:00</DestTime>
+  <Importer>WavImporter</Importer>
+  <ImporterTime>2022-07-26T12:44:56+01:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2022-07-26T12:44:56+01:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

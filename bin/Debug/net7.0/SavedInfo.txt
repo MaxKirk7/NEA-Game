@@ -1,0 +1,10 @@
+PlayerID,1068
+Skin,Player/Skins/Base/Second Best
+GamesPlayed,0
+Music,true
+SoundEFX,true
+
+
+
+
+

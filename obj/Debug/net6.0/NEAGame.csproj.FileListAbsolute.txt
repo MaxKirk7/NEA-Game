@@ -1,77 +1,79 @@
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Left Arrow.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Right Arrow.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Rounded Square Button.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Settings Cog.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Trophie.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Fonts\TitleFont.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sounds\Loading.ogg
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sounds\Loading.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sprites\BackGroundSpace.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sprites\Moon.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Asteroid\Asteroid.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Bullet\Bullet.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Base\Base Skin.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Base\Best Ship.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Base\Second Best.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Moving\Base Fly.xnb
-d:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.exe
-d:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.deps.json
-d:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.runtimeconfig.json
-d:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.pdb
-d:\NEA\NEAGame\bin\Debug\net6.0\Azure.Core.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Azure.Identity.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Identity.Client.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Identity.Client.Extensions.Msal.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.SqlServer.Server.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\MonoGame.Framework.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Serilog.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\Serilog.Sinks.Console.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.Drawing.Common.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.Memory.Data.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.Runtime.Caching.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.Security.Permissions.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\System.Windows.Extensions.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\linux-x64\native\libSDL2-2.0.so.0
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\linux-x64\native\libopenal.so.1
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\osx\native\libSDL2.dylib
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\osx\native\libopenal.1.dylib
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x64\native\SDL2.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x64\native\soft_oal.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x86\native\SDL2.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x86\native\soft_oal.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-d:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.csproj.AssemblyReference.cache
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.GeneratedMSBuildEditorConfig.editorconfig
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.AssemblyInfoInputs.cache
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.AssemblyInfo.cs
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.csproj.CoreCompileInputs.cache
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.csproj.CopyComplete
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.dll
-d:\NEA\NEAGame\obj\Debug\net6.0\refint\NEAGame.dll
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.pdb
-d:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.genruntimeconfig.cache
-d:\NEA\NEAGame\obj\Debug\net6.0\ref\NEAGame.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Left Arrow.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Right Arrow.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Rounded Square Button.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Settings Cog.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Buttons\Trophie.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Fonts\TitleFont.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sounds\Loading.ogg
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sounds\Loading.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sprites\BackGroundSpace.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\LoadingScreen\Sprites\Moon.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Asteroid\Asteroid.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Bullet\Bullet.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Base\Base Skin.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Base\Best Ship.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Base\Second Best.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Player\Skins\Moving\Base Fly.xnb
+D:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.exe
+D:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.deps.json
+D:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.runtimeconfig.json
+D:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\NEAGame.pdb
+D:\NEA\NEAGame\bin\Debug\net6.0\Azure.Core.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Azure.Identity.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Identity.Client.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Identity.Client.Extensions.Msal.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.SqlServer.Server.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\MonoGame.Framework.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Serilog.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Serilog.Sinks.Console.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.Memory.Data.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.Runtime.Caching.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.Security.Permissions.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\System.Windows.Extensions.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\linux-x64\native\libSDL2-2.0.so.0
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\linux-x64\native\libopenal.so.1
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\osx\native\libSDL2.dylib
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\osx\native\libopenal.1.dylib
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x64\native\SDL2.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x64\native\soft_oal.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x86\native\SDL2.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win-x86\native\soft_oal.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.csproj.AssemblyReference.cache
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.GeneratedMSBuildEditorConfig.editorconfig
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.AssemblyInfoInputs.cache
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.AssemblyInfo.cs
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.csproj.CoreCompileInputs.cache
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.csproj.CopyComplete
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.dll
+D:\NEA\NEAGame\obj\Debug\net6.0\refint\NEAGame.dll
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.pdb
+D:\NEA\NEAGame\obj\Debug\net6.0\NEAGame.genruntimeconfig.cache
+D:\NEA\NEAGame\obj\Debug\net6.0\ref\NEAGame.dll
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Key Media\GameMusic.ogg
+D:\NEA\NEAGame\bin\Debug\net6.0\Content\Key Media\GameMusic.xnb

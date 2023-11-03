@@ -10,6 +10,7 @@
     <File>d:/NEA/NEAGame/Content/Buttons/Settings Cog.png</File>
     <File>d:/NEA/NEAGame/Content/Buttons/Trophie.png</File>
     <File>d:/NEA/NEAGame/Content/Fonts/TitleFont.spritefont</File>
+    <File>d:/NEA/NEAGame/Content/Key Media/GameMusic.mp3</File>
     <File>d:/NEA/NEAGame/Content/LoadingScreen/Sounds/Loading.mp3</File>
     <File>d:/NEA/NEAGame/Content/LoadingScreen/Sprites/BackGroundSpace.webp</File>
     <File>d:/NEA/NEAGame/Content/LoadingScreen/Sprites/Moon.png</File>
@@ -21,6 +22,7 @@
     <File>d:/NEA/NEAGame/Content/Player/Skins/Moving/Base Fly.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

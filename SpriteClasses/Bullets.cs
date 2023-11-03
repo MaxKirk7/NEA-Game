@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using NEAScreen;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using NEAGame;
+using Microsoft.IdentityModel.Tokens;
 
 namespace NEAGameObjects
 {
     class Bullets
     {
+        private static bool IsSoundEFX;
         public Rectangle rect;
         private static readonly double LifeTime = 3.5;
         public double LifeElapsed = 0;
@@ -16,6 +20,8 @@ namespace NEAGameObjects
         private Vector2 Size = new(25, 25);
         private static Texture2D Texture;
         private static List<Bullets> FiredBullets = new(5); // Max 5 Bullets
+
+        private static SoundEffectInstance ShootSFX = null;
 
         public Bullets(Vector2 startPosition, double direction)
         {
@@ -93,6 +99,11 @@ namespace NEAGameObjects
             // Only create a new bullet if the max limit is not reached
             if (FiredBullets.Count < 5)
             {
+                if (IsSoundEFX)
+                {
+                    ShootSFX.Stop();
+                    ShootSFX.Play();
+                }
                 FiredBullets.Add(new Bullets(start, direction));
             }
         }
@@ -106,8 +117,19 @@ namespace NEAGameObjects
         {
             return FiredBullets;
         }
-        public void Remove(){
+        public void Remove()
+        {
             FiredBullets.Remove(this);
+        }
+        public static void Reset()
+        {
+            FiredBullets.Clear();
+        }
+        public static void SetSoundEffect(SoundEffect sound,bool Sound)
+        {
+            ShootSFX = sound.CreateInstance();
+            ShootSFX.Volume = 1f;
+            IsSoundEFX = Sound;
         }
     }
 }

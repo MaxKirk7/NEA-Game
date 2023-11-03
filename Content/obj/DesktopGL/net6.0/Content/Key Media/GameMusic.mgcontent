@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>d:/NEA/NEAGame/Content/Key Media/GameMusic.mp3</SourceFile>
+  <SourceTime>2023-10-28T18:20:18.0320721+01:00</SourceTime>
+  <DestFile>d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Key Media/GameMusic.xnb</DestFile>
+  <DestTime>2023-10-28T23:25:26.5050193+01:00</DestTime>
+  <Importer>Mp3Importer</Importer>
+  <ImporterTime>2022-07-26T12:44:56+01:00</ImporterTime>
+  <Processor>SongProcessor</Processor>
+  <ProcessorTime>2022-07-26T12:44:56+01:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput>
+    <string>d:/NEA/NEAGame/Content/bin/DesktopGL/Content/Key Media/GameMusic.ogg</string>
+  </BuildOutput>
+</PipelineBuildEvent>

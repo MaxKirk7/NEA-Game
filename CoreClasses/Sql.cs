@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO.Pipes;
 using Microsoft.Data.SqlClient;
-using NEAGameObjects;
 namespace SQLQuery;
 class Sql
 {

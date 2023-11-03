@@ -1,30 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using NEAScreen;
 using Serilog;
-
 namespace NEAGame
 {
     public class Game1 : Game
     {
         //by using dictionary screens are only generated when needed/ used
-        private readonly Dictionary<Type , Lazy<IScreen>> MainScreens = new Dictionary<Type, Lazy<IScreen>>(){//https://learn.microsoft.com/en-us/dotnet/api/system.lazy-1?view=net-7.0
+        private readonly Dictionary<Type, Lazy<IScreen>> MainScreens = new Dictionary<Type, Lazy<IScreen>>(){//https://learn.microsoft.com/en-us/dotnet/api/system.lazy-1?view=net-7.0
             {typeof(LoadingScreen),new Lazy<IScreen>(() => new LoadingScreen())},
             {typeof(HomeScreen),new Lazy<IScreen>(() => new HomeScreen())},
             {typeof(LoginScreen),new Lazy<IScreen>(() => new LoginScreen())},
             {typeof(MainGame),new Lazy<IScreen>(() => new MainGame())}
         };
         private ScreenManager screens;
+        private static bool IsMuted = false;
         private readonly GraphicsDeviceManager _graphics;
         private static SpriteBatch _spriteBatch;
         private static ContentManager Con;
         public const int ScreenWidth = 1920;
         public const int ScreenHeight = 1080;
         public const int Frames = 60;
+        private List<string> file = new List<string>();
+        public static Song GameMusic;
 
         public Game1()
         {
@@ -54,9 +59,25 @@ namespace NEAGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             // Load the initial screen lazily
-            var initialScreenType = typeof(LoginScreen); // initial screen
+            var initialScreenType = typeof(LoadingScreen); // initial screen
             screens.setScreen(MainScreens[initialScreenType].Value, Con, _spriteBatch);
-            // TODO: use this.Content to load your game content here
+            //Sound For Game Qued
+            GameMusic = Con.Load<Song>("Key Media/GameMusic");
+            using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                using StreamReader reader = new(stream);
+                var line = "";
+                while ((line = reader.ReadLine()) != null)
+                {
+                    file.Add(line);
+                }
+                if(file.Count == 0){ // if new game
+                    var newfile = "PlayerID,\nSkin,\nGamesPlayed,0\nMusic,true\nSoundEFX,true";
+                    using StreamWriter Stream = new(stream);
+                    Stream.Write(newfile);
+                }
+            }
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -66,9 +87,12 @@ namespace NEAGame
 
             var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000F;
             screens.Update(delta);
+            
+            MediaPlayer.IsMuted = IsMuted;
 
             if (screens.IsScreenOver())
             {
+                //UnloadContent();
                 Log.Information($"{screens.currentScreen()}: Screen Over");
                 var currentScreenType = screens.currentScreen().GetType();
 
@@ -91,17 +115,40 @@ namespace NEAGame
         }
 
         // logic to switch screens
-        private Type GetNextScreenType(Type current){
-            if (current == typeof(LoadingScreen)){
+        private Type GetNextScreenType(Type current)
+        {
+            if (current == typeof(LoadingScreen))
+            {
+                MediaPlayer.Volume = 0.6F;
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(GameMusic);
+                if (!bool.Parse(file[3].Split(",")[1])){
+                    MediaPlayer.IsMuted = true;
+                }
                 return typeof(LoginScreen);
             }
-            else if (current == typeof(LoginScreen)){
+            else if (current == typeof(LoginScreen))
+            {
+
                 return typeof(HomeScreen);
             }
-            else if (current == typeof(HomeScreen)){
+            else if (current == typeof(HomeScreen))
+            {
                 return typeof(MainGame);
             }
-            else{
+            else if (current == typeof(MainGame))
+            {
+                if (MainGame.EndGame())
+                {
+                    Exit();
+                }
+                MainGame.NewGame = true;
+
+                return typeof(HomeScreen);
+            }
+            else
+            {
+
                 return typeof(LoginScreen);
             }
         }
@@ -117,6 +164,7 @@ namespace NEAGame
 
         protected override void UnloadContent()
         {
+            Content.Unload();
             base.UnloadContent();
         }
 
@@ -128,6 +176,9 @@ namespace NEAGame
         public static ContentManager GetContentManager()
         {
             return Con;
+        }
+        public static void Mute(){
+            IsMuted = !IsMuted;
         }
     }
 }

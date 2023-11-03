@@ -1,3 +1,0 @@
-PlayerID,1058
-Skin,Player/Skins/Base/Second Best
-GamesPlayed,0

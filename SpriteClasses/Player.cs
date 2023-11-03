@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NEAGame;
@@ -14,8 +16,8 @@ class Player
     private static readonly float TeleportDelay = 10;
     private static float TeleportElapsedTime = 10;
     private static Rectangle rect;
-    private static readonly Texture2D texture = Game1.GetContentManager().Load<Texture2D>(MainGame.saveFile()[1].Replace("Skin,", ""));
-    private static Vector2 Size = new Vector2(texture.Height,texture.Height) / 4;
+    private static Texture2D texture;
+    private static Vector2 Size = new Vector2(75,75);
     private static Vector2 Position = new(Game1.ScreenWidth / 2 - Size.X / 2, Game1.ScreenHeight / 2 - Size.X / 2); //centre screen start
     private static readonly double RadianTurnSpeed = 2.5 * (Math.PI / 180); //speed the player will rotate
     private static double UnitCircleValue = 0; // direction the player will move/ face
@@ -100,8 +102,8 @@ class Player
     }
     public static bool IsHit(Rectangle obj)
     {
-        Rectangle Hitbox = new Rectangle(rect.X,rect.Y,rect.Width - 4 , rect.Height -4);
-        Rectangle ObjHitbox = new(obj.X, obj.Y, obj.Width-2, obj.Height-2);
+        Rectangle Hitbox = new Rectangle(rect.X, rect.Y, rect.Width - 4, rect.Height - 4);
+        Rectangle ObjHitbox = new(obj.X, obj.Y, obj.Width - 2, obj.Height - 2);
         //ObjHitbox.Offset(2, 2);
         return Hitbox.Intersects(ObjHitbox);
     }
@@ -109,5 +111,15 @@ class Player
     {
         Vector2 bulletStartPosition = Position;
         Bullets.Shoot(bulletStartPosition, UnitCircleValue);
+    }
+    public static void Reset()
+    {
+        Position = new(Game1.ScreenWidth / 2 - Size.X / 2, Game1.ScreenHeight / 2 - Size.X / 2);
+        UnitCircleValue = 0;
+        var newSkin= MainHomeScreen.GetActiveSkin();
+        texture = Game1.GetContentManager().Load<Texture2D>(newSkin.BaseSkin);
+    }
+    public static void GetFile(List<string> file){
+        texture = Game1.GetContentManager().Load<Texture2D>(file[1].Replace("Skin,", ""));
     }
 }

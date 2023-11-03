@@ -12,6 +12,7 @@ namespace NEAScreen
 {
     class LoginScreen : IScreen
     {
+        private bool NewScreen = false;
         private bool ScreenOver = false;
         private Button SignUp;
         private Button SignIn;
@@ -31,6 +32,7 @@ namespace NEAScreen
 
         public void LoadContent(ContentManager con, SpriteBatch sp)
         {
+            SavedFile.Clear();
             using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate))
             {
                 using (StreamReader reader = new(stream))
@@ -41,7 +43,7 @@ namespace NEAScreen
                         SavedFile.Add(line);
                     }
                 }
-                if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0]))
+                if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0].Split(",")[1]))
                 {
                     ScreenOver = true;
                 }
@@ -69,6 +71,10 @@ namespace NEAScreen
 
         public void Update(float delta)
         {
+            if (NewScreen){
+                LoadContent(Game1.GetContentManager(),Game1.GetSpriteBatch());
+                NewScreen = false;
+            }
             Button.Update();
             if (SignIn.ButtonPressed() || SignUp.ButtonPressed())
             {
@@ -88,8 +94,6 @@ namespace NEAScreen
 
                     if (IsValidInput())
                     {
-
-
                         var result = Sql.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
                         if (SignIn.ButtonPressed())
                         {
@@ -173,7 +177,7 @@ namespace NEAScreen
         {
             if (ScreenOver)
             {
-
+                NewScreen = true;
                 File.WriteAllLines("SavedInfo.txt", SavedFile);
                 Button.EndButtons();
             }

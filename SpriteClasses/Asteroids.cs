@@ -160,6 +160,9 @@ class Asteroids
         var Copy = new List<Asteroids>(asteroidsToRemove); // Create a copy of the list
         asteroidsToRemove.Clear(); // Clear the original list
         return Copy; // Return the copy containing destroyed asteroids
-
+    }
+    public static void Reset(){
+        CurrentAsteroids.Clear();
+        asteroidsToRemove.Clear();
     }
 }

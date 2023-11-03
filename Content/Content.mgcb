@@ -80,6 +80,24 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/TitleFont.spritefont
 
+#begin Key Media/GameMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Key Media/GameMusic.mp3
+
+#begin Key Media/Shot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Key Media/Shot.wav
+
+#begin LoadingScreen/Sounds/IntroSong.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:LoadingScreen/Sounds/IntroSong.mp3
+
 #begin LoadingScreen/Sounds/Loading.mp3
 /importer:Mp3Importer
 /processor:SongProcessor

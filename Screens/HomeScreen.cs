@@ -9,16 +9,18 @@ using Serilog;
 namespace NEAScreen;
 class HomeScreen : IScreen
 {
+    private bool NewScreen = false;
     private bool ScreenOver = false;
     private Thing Background;
-    private readonly List<IScreen> HomeScreens = new() { new MainHomeScreen(), new LeaderBoardHomeScreen() };
+    private readonly List<IScreen> HomeScreens = new() { new MainHomeScreen(), new LeaderBoardHomeScreen(), new SetttingsHomeScreen() };
     private ScreenManager HomeScreenManager;
-    private static readonly List<string> SavedFile = new();
+    private static List<string> SavedFile = new();
     private static Skin activeSkin;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
         HomeScreenManager = new ScreenManager();
-        //Set backgrounds to use
+        SavedFile.Clear();
+        //Set b
         using (FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Read))
         {
             using (StreamReader reader = new(stream))
@@ -39,6 +41,12 @@ class HomeScreen : IScreen
 
     public void Update(float delta)
     {
+        if (NewScreen)
+        {
+            LoadContent(Game1.GetContentManager(), Game1.GetSpriteBatch());
+            NewScreen = false;
+        }
+        HomeScreenManager.Update(delta);
         var IndexCurrentScreen = HomeScreens.IndexOf(HomeScreenManager.currentScreen());
         if (HomeScreenManager.IsScreenOver())
         {
@@ -57,18 +65,21 @@ class HomeScreen : IScreen
                 else if (InstanceHomeScreen.IsSettingsSelected())
                 {
                     ScreenOver = false;
-                    HomeScreenManager.setScreen(HomeScreens[0], Game1.GetContentManager(), Game1.GetSpriteBatch());
+                    HomeScreenManager.setScreen(HomeScreens[2], Game1.GetContentManager(), Game1.GetSpriteBatch());
                     Log.Information("Setttings");
                 }
             }
             else if (IndexCurrentScreen != 0)
             { // if the user selects back button ever go back to the main screen
+                if (IndexCurrentScreen == 1)
+                {
+                    SavedFile = SetttingsHomeScreen.ReturnFile();
+                }
                 Log.Information("Finsihed LeaderBoard");
                 ScreenOver = false;
                 HomeScreenManager.setScreen(HomeScreens[0], Game1.GetContentManager(), Game1.GetSpriteBatch());
             }
         }
-        HomeScreenManager.Update(delta);
     }
     public void Draw(SpriteBatch sp)
     {
@@ -79,8 +90,11 @@ class HomeScreen : IScreen
     }
     public bool EndScreen()
     {
+        var Over = false;
         if (ScreenOver)
         {
+            ScreenOver = false;
+            Over = true;
             activeSkin = MainHomeScreen.GetActiveSkin();
             if (SavedFile.Count > 1)
             {
@@ -94,12 +108,16 @@ class HomeScreen : IScreen
             using StreamWriter writer = new(stream);
             foreach (string s in SavedFile)
             {
-                writer.WriteLine(s);
+                if (s != "")
+                {
+                    writer.WriteLine(s);
+                }
             }
-            writer.Flush();
             Button.EndButtons();
+            SavedFile.Clear();
+            NewScreen = true;
         }
-        return ScreenOver;
+        return Over;
     }
     public static List<string> saveFile()
     {

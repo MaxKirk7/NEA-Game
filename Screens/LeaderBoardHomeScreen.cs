@@ -9,6 +9,7 @@ using SQLQuery;
 namespace NEAScreen;
 class LeaderBoardHomeScreen : IScreen
 {
+    private bool First;
     private bool ScreenOver = false;
     private BlankBox LeaderBoardBackGround;
     private List<string> SavedFile = HomeScreen.saveFile();
@@ -20,30 +21,46 @@ class LeaderBoardHomeScreen : IScreen
     private List<TextBox> HighScores = new(6);
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
+        Scores.Clear();
         Scores = Sql.HighScores(SavedFile[0].Replace("PlayerID,", ""));
         LeaderBoardBackGround = new(new Color(10, 20, 5, 180), con, sp, 500, 500, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         Back = new("Fonts/TitleFont", "Back", con, sp, 100, 980, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
-        for (int i = 0; i < Scores.Count; i++)
+        var Ypos = 320;
+        if (!First)
         {
-            var Ypos = 320;
-            if (i == 0)
+            for (int i = 0; i < Scores.Count; i++)
             {
-                HighScores.Add(new TextBox("Fonts/TitleFont", "High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
-                Ypos += 60;
+                if (i == 0)
+                {
+                    HighScores.Add(new TextBox("Fonts/TitleFont", "High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
+                    Ypos += 60;
+                }
+                if (i == 5)
+                {
+                    Ypos += 60;
+                    HighScores.Add(new TextBox("Fonts/TitleFont", "Personal High:", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
+                }
+                if (Scores[i] != null)
+                {
+                    HighScores.Add(new TextBox("Fonts/TitleFont", i + 1 + ": " + Scores[i][0] + "......" + Scores[i][1], con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 1.5));
+                }
+                if (i == 1)
+                {
+                    Ypos += 60;
+                    HighScores.Add(new TextBox("Fonts/TitleFont", "Weekly High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
+                }
             }
-            if (i == 5){
-                Ypos += 60;
-                HighScores.Add(new TextBox("Fonts/TitleFont", "Personal High:", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
-            }
-            if (Scores[i] != null)
+        }
+        if (First)
+        {
+            for (int i = 0; i < Scores.Count; i++)
             {
-                HighScores.Add(new TextBox("Fonts/TitleFont", i + 1 + ": " + Scores[i][0] + "......" + Scores[i][1], con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 1.5));
+                if (i != 0 || i != 1 || i != 5)
+                {
+                    HighScores[i].ChangeText(i + 1 + ": " + Scores[i][0] + "......" + Scores[i][1]);
+                }
             }
-            if (i == 1)
-            {
-                Ypos += 60;
-                HighScores.Add(new TextBox("Fonts/TitleFont", "Weekly High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
-            }
+            First = false;
         }
     }
 
@@ -74,6 +91,9 @@ class LeaderBoardHomeScreen : IScreen
         if (Over)
         {
             Button.EndButtons();
+            Scores.Clear();
+            HighScores.Clear();
+            First = true;
         }
         return Over;
     }

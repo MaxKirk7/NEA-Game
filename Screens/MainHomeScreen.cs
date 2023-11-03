@@ -12,6 +12,7 @@ using SQLQuery;
 namespace NEAScreen;
 class MainHomeScreen : IScreen
 {
+    private bool NewScreen = false;
     private double ButtonElapsedTime = 0;
     private double ButtonPressDelay = 0.2;
     private bool ScreenOver = false;
@@ -20,7 +21,7 @@ class MainHomeScreen : IScreen
     private bool SettingsSelected = false;
     private readonly Sql Query = new();
     private static readonly List<Skin> AvailableSkins = new();
-    private List<string> SavedFile = HomeScreen.saveFile();
+    private List<string> SavedFile;
     private Sprite CurrentSkin;
     private BlankBox SkinBackGround;
     private TextBox test;
@@ -35,6 +36,8 @@ class MainHomeScreen : IScreen
     private Thing SettingsSymbol;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
+        AvailableSkins.Clear();
+        SavedFile = HomeScreen.saveFile();
         //Create Buttons
         test = new TextBox("Fonts/TitleFont", "Test", con, sp, 200, 400, Color.Red, 2);
         PlayGame = new("Fonts/TitleFont", "Start Game", con, sp, Game1.ScreenWidth / 2, 600, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
@@ -58,17 +61,20 @@ class MainHomeScreen : IScreen
         //load the last used skin
         if (SavedFile.Count > 1 && !String.IsNullOrWhiteSpace(SavedFile[1]))
         {
-            var Skin = SavedFile[1].Replace("Skin,", "");//remove the pretext before the skin location
-            ActiveSkinIndex = 0;
-            foreach (var skin in AvailableSkins)
+            if (!NewScreen)
             {
-                if (skin.BaseSkin == Skin)
-                { //the variableSkins base skin is the same as the searchd for skin
-                    ActiveSkinIndex = AvailableSkins.IndexOf(skin);
-                    break;
+                var Skin = SavedFile[1].Replace("Skin,", "");//remove the pretext before the skin location
+                ActiveSkinIndex = 0;
+                foreach (var skin in AvailableSkins)
+                {
+                    if (skin.BaseSkin == Skin)
+                    { //the variableSkins base skin is the same as the searchd for skin
+                        ActiveSkinIndex = AvailableSkins.IndexOf(skin);
+                        break;
+                    }
                 }
+                CurrentSkin = new Sprite(AvailableSkins[ActiveSkinIndex].BaseSkin, con, sp, 150, 150, Game1.ScreenWidth / 2, 200);
             }
-            CurrentSkin = new Sprite(AvailableSkins[ActiveSkinIndex].BaseSkin, con, sp, 150, 150, Game1.ScreenWidth / 2, 200);
         }
         else
         {
@@ -78,6 +84,11 @@ class MainHomeScreen : IScreen
 
     public void Update(float delta)
     {
+        if (NewScreen)
+        {
+            LoadContent(Game1.GetContentManager(), Game1.GetSpriteBatch());
+            NewScreen = false;
+        }
         Button.Update();
         if (ButtonPressDelay < ButtonElapsedTime)
         {
@@ -120,6 +131,7 @@ class MainHomeScreen : IScreen
         if (NewGame.ButtonPressed())
         {
             SavedFile = Sql.ResetAverageScore(SavedFile);
+            SavedFile[2] = "GamesPlayed,0";
             ScreenOver = true;
         }
         if (LeaderBoard.ButtonPressed())
@@ -152,10 +164,11 @@ class MainHomeScreen : IScreen
     public bool EndScreen()
     {
         var IsOver = ScreenOver;
-        ScreenOver = false;
         if (IsOver)
         {
+            ScreenOver = false;
             Button.EndButtons();
+            NewScreen = true;
         }
         return IsOver;
     }

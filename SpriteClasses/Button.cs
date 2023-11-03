@@ -27,6 +27,7 @@ class Button : TextBox
     public static void Update(){
         foreach (var button in AllButtons){
             if(button.IsActive){
+                button.IsPressed = false;
                 button.UpdateAllButton();
             }
         }
@@ -46,9 +47,6 @@ class Button : TextBox
             if (mouse.LeftButton == ButtonState.Pressed){
                 IsPressed = true;
             }
-            else{
-                IsPressed = false;
-            }
         }
         else{ActiveColour = Normal;}
     }
@@ -65,6 +63,7 @@ class Button : TextBox
     }
     public void AddButton(){
         this.IsActive = true;
+        AllButtons.Add(this);
     }
     public static void EndButtons(){
         AllButtons.Clear();
