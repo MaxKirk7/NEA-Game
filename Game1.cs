@@ -20,6 +20,7 @@ namespace NEAGame
             {typeof(LoginScreen),new Lazy<IScreen>(() => new LoginScreen())},
             {typeof(MainGame),new Lazy<IScreen>(() => new MainGame())}
         };
+        public static bool LogIn { get; set; }
         private ScreenManager screens;
         private static bool IsMuted = false;
         private readonly GraphicsDeviceManager _graphics;
@@ -52,6 +53,21 @@ namespace NEAGame
             Window.Title = "NEA Game";
             screens = new ScreenManager();
             Con = Content;
+            using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                using StreamReader reader = new(stream);
+                var line = "";
+                while ((line = reader.ReadLine()) != null)
+                {
+                    file.Add(line);
+                }
+                if (file.Count == 0)
+                { // if new game
+                    var newfile = "PlayerID,\nSkin,\nGamesPlayed,0\nMusic,true\nSoundEFX,true";
+                    using StreamWriter Stream = new(stream);
+                    Stream.Write(newfile);
+                }
+            }
             base.Initialize();
         }
 
@@ -63,33 +79,29 @@ namespace NEAGame
             screens.setScreen(MainScreens[initialScreenType].Value, Con, _spriteBatch);
             //Sound For Game Qued
             GameMusic = Con.Load<Song>("Key Media/GameMusic");
+
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
             using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
+                file.Clear();
                 using StreamReader reader = new(stream);
                 var line = "";
                 while ((line = reader.ReadLine()) != null)
                 {
                     file.Add(line);
                 }
-                if(file.Count == 0){ // if new game
-                    var newfile = "PlayerID,\nSkin,\nGamesPlayed,0\nMusic,true\nSoundEFX,true";
-                    using StreamWriter Stream = new(stream);
-                    Stream.Write(newfile);
+                if (file.Count > 5)
+                {
                 }
             }
-
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
             var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000F;
             screens.Update(delta);
-            
             MediaPlayer.IsMuted = IsMuted;
-
             if (screens.IsScreenOver())
             {
                 //UnloadContent();
@@ -117,39 +129,48 @@ namespace NEAGame
         // logic to switch screens
         private Type GetNextScreenType(Type current)
         {
-            if (current == typeof(LoadingScreen))
+            if (!LogIn)
             {
-                MediaPlayer.Volume = 0.6F;
-                MediaPlayer.IsRepeating = true;
-                MediaPlayer.Play(GameMusic);
-                if (!bool.Parse(file[3].Split(",")[1])){
-                    MediaPlayer.IsMuted = true;
-                }
-                return typeof(LoginScreen);
-            }
-            else if (current == typeof(LoginScreen))
-            {
-
-                return typeof(HomeScreen);
-            }
-            else if (current == typeof(HomeScreen))
-            {
-                return typeof(MainGame);
-            }
-            else if (current == typeof(MainGame))
-            {
-                if (MainGame.EndGame())
+                if (current == typeof(LoadingScreen))
                 {
-                    Exit();
+                    MediaPlayer.Volume = 0.6F;
+                    MediaPlayer.IsRepeating = true;
+                    MediaPlayer.Play(GameMusic);
+                    if (!bool.Parse(file[3].Split(",")[1]))
+                    {
+                        MediaPlayer.IsMuted = true;
+                    }
+                    return typeof(LoginScreen);
                 }
-                MainGame.NewGame = true;
+                else if (current == typeof(LoginScreen))
+                {
 
-                return typeof(HomeScreen);
+                    return typeof(HomeScreen);
+                }
+                else if (current == typeof(HomeScreen))
+                {
+                    return typeof(MainGame);
+                }
+                else if (current == typeof(MainGame))
+                {
+                    if (MainGame.EndGame())
+                    {
+                        Exit();
+                    }
+                    MainGame.NewGame = true;
+
+                    return typeof(HomeScreen);
+                }
+                else
+                {
+
+                    return typeof(LoginScreen); // if any errors
+                }
             }
             else
             {
-
-                return typeof(LoginScreen);
+                LogIn = false;
+                return typeof(LoginScreen); // if opting to re do the log in screen
             }
         }
 
@@ -177,7 +198,8 @@ namespace NEAGame
         {
             return Con;
         }
-        public static void Mute(){
+        public static void Mute()
+        {
             IsMuted = !IsMuted;
         }
     }

@@ -6,8 +6,6 @@ using NEAGame;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.IdentityModel.Tokens;
-using Serilog;
 
 namespace NEAScreen;
 class SetttingsHomeScreen : IScreen
@@ -15,7 +13,7 @@ class SetttingsHomeScreen : IScreen
     private MouseState OldMouse;
     private static bool NewScreen = false;
     private bool ScreenOver = false;
-    private static List<string> SaveFile = new();
+    private static List<string> SaveFile = new(5);
     private BlankBox Backdrop;
     private Button Music;
     private Button SoundEFX;
@@ -67,16 +65,13 @@ class SetttingsHomeScreen : IScreen
             Back.AddButton();
             SoundEFX.AddButton();
             Music.AddButton();
+            SignOut.AddButton();
         }
+        NewScreen = false;
     }
 
     public void Update(float delta)
     {
-        if (NewScreen)
-        {
-            LoadContent(Game1.GetContentManager(), Game1.GetSpriteBatch());
-            NewScreen = false;
-        }
         Button.Update();
         if (Music.ButtonPressed())
         {
@@ -90,7 +85,7 @@ class SetttingsHomeScreen : IScreen
                 Game1.Mute();
             }
         }
-        if (SoundEFX.ButtonPressed())
+        else if (SoundEFX.ButtonPressed())
         {
             if (OldMouse != Mouse.GetState() || OldMouse.LeftButton == ButtonState.Released)
             {
@@ -108,7 +103,18 @@ class SetttingsHomeScreen : IScreen
         {
             ScreenOver = true;
         }
-        OldMouse = Mouse.GetState();
+        else if (SignOut.ButtonPressed())
+        {
+            ScreenOver = true;
+            Game1.LogIn = true;
+            SaveFile[0] = "PlayerID,";
+            SaveFile[1] = "Skin,";
+            SaveFile[2] = "GamesPlayed,0";
+        }
+        else
+        {
+            OldMouse = Mouse.GetState();
+        }
     }
     public void Draw(SpriteBatch sp)
     {
@@ -127,7 +133,7 @@ class SetttingsHomeScreen : IScreen
         if (Over)
         {
             Button.EndButtons();
-            using FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Write);
+            using FileStream stream = new("SavedInfo.txt", FileMode.Truncate, FileAccess.Write);
             using StreamWriter writer = new(stream);
             foreach (string s in SaveFile)
             {
@@ -136,6 +142,7 @@ class SetttingsHomeScreen : IScreen
                     writer.WriteLine(s);
                 }
             }
+            writer.Flush();
             NewScreen = true;
         }
         return Over;

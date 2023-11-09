@@ -2,13 +2,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Serilog;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace _Sprites;
 class InputBox : TextBox
 {
+    private Keys[] OldInputs;
     private readonly List<char> Input;
     private bool BoxSelected;
     private readonly int MaxLength; //set the max length of this input
@@ -16,7 +16,7 @@ class InputBox : TextBox
     private Rectangle rect;
     private readonly Queue Q = new(10);
     private float LastKeyPressTime = 0F;
-    private readonly float debounceDelay = 0.18f; //delay in seconds between recording keys
+    private readonly float debounceDelay = 0.145f; //delay in seconds between recording keys
     public InputBox(string FontLocation, string text, ContentManager con, SpriteBatch sp, int X, int Y, Color StringColor, double scale, int width, int height, int MaxLength) : base(FontLocation, text, con, sp, X, Y, StringColor, scale, width, height)
     {
         AllInputBoxes.Add(this);
@@ -85,20 +85,22 @@ class InputBox : TextBox
     {
         KeyboardState CurrentInput = Keyboard.GetState();
         var keyInputs = CurrentInput.GetPressedKeys();
-
-        foreach (Keys key in keyInputs)
-        {
-            if (key != Keys.LeftShift || key != Keys.RightShift)
+        // Check if enough time has passed since the last key press
+            foreach (Keys key in keyInputs)
             {
-                // Check if enough time has passed since the last key press
+                if (!OldInputs.Contains(key)){
+                    LastKeyPressTime = 100;
+                }
                 if (LastKeyPressTime >= debounceDelay)
                 {
-
-                    Q.enQueue(key); // Add the key pressed to the queue
-                    LastKeyPressTime = 0f; // Reset timeSinceLastKeyPress
+                    if (key != Keys.LeftShift || key != Keys.RightShift)
+                    {
+                        Q.enQueue(key); // Add the key pressed to the queue
+                        LastKeyPressTime = 0f; // Reset timeSinceLastKeyPress
+                    }
                 }
             }
-        }
+        OldInputs = keyInputs;
         // Update timeSinceLastKeyPress
         LastKeyPressTime += delta;
     }
@@ -120,14 +122,12 @@ class InputBox : TextBox
         if (CharKey != ' ')
         {
             Input.Add(CharKey);
-            Log.Information($"Input appended: {Input.Count}");
-            Log.Information($"Key value = {CharKey}");
         }
     }
     private static char KeyToChar(Keys key)
     {
         var keyboardstate = Keyboard.GetState();
-        bool isShiftPressed = keyboardstate.IsKeyDown(Keys.RightShift);
+        bool isShiftPressed = keyboardstate.IsKeyDown(Keys.RightShift) || keyboardstate.IsKeyDown(Keys.LeftShift);
         if (keyboardstate.CapsLock && isShiftPressed)
         {
             isShiftPressed = false;
@@ -254,5 +254,16 @@ class InputBox : TextBox
             GetUserInput(delta);
             AppendWithInput();
         }
+    }
+    public static void RemoveBoxes()
+    {
+        for (var i = 0; i < AllInputBoxes.Count; i++)
+        {
+            AllInputBoxes.RemoveAt(i);
+        }
+    }
+    public void AddBox()
+    {
+        AllInputBoxes.Add(this);
     }
 }

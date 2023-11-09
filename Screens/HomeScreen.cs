@@ -33,19 +33,16 @@ class HomeScreen : IScreen
             }
         }
         HomeScreenManager.setScreen(HomeScreens[0], con, sp);
-
-
-        //Set backgrounds to use
-        Background = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
+        if (!NewScreen)
+        {
+            //Set backgrounds to use
+            Background = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
+        }
+        NewScreen = false;
     }
 
     public void Update(float delta)
     {
-        if (NewScreen)
-        {
-            LoadContent(Game1.GetContentManager(), Game1.GetSpriteBatch());
-            NewScreen = false;
-        }
         HomeScreenManager.Update(delta);
         var IndexCurrentScreen = HomeScreens.IndexOf(HomeScreenManager.currentScreen());
         if (HomeScreenManager.IsScreenOver())
@@ -71,13 +68,17 @@ class HomeScreen : IScreen
             }
             else if (IndexCurrentScreen != 0)
             { // if the user selects back button ever go back to the main screen
-                if (IndexCurrentScreen == 1)
-                {
-                    SavedFile = SetttingsHomeScreen.ReturnFile();
-                }
-                Log.Information("Finsihed LeaderBoard");
+                Log.Information("Screen over");
                 ScreenOver = false;
                 HomeScreenManager.setScreen(HomeScreens[0], Game1.GetContentManager(), Game1.GetSpriteBatch());
+                if (IndexCurrentScreen == 2)
+                {
+                    SavedFile = SetttingsHomeScreen.ReturnFile();
+                    if (Game1.LogIn)
+                    {
+                        ScreenOver = true;
+                    }
+                }
             }
         }
     }
@@ -90,21 +91,24 @@ class HomeScreen : IScreen
     }
     public bool EndScreen()
     {
-        var Over = false;
+        var Over = ScreenOver;
         if (ScreenOver)
         {
             ScreenOver = false;
-            Over = true;
             activeSkin = MainHomeScreen.GetActiveSkin();
-            if (SavedFile.Count > 1)
+            if (!Game1.LogIn)
             {
-                SavedFile[1] = $"Skin,{activeSkin.BaseSkin}";
+
+                if (SavedFile.Count > 1)
+                {
+                    SavedFile[1] = $"Skin,{activeSkin.BaseSkin}";
+                }
+                else
+                {
+                    SavedFile.Add($"Skin,{activeSkin.BaseSkin}");
+                }
             }
-            else
-            {
-                SavedFile.Add($"Skin,{activeSkin.BaseSkin}");
-            }
-            using FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Write);
+            using FileStream stream = new("SavedInfo.txt", FileMode.Truncate, FileAccess.Write);
             using StreamWriter writer = new(stream);
             foreach (string s in SavedFile)
             {

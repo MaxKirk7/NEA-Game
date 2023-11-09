@@ -21,13 +21,12 @@ class LeaderBoardHomeScreen : IScreen
     private List<TextBox> HighScores = new(6);
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
+        HighScores.Clear();
         Scores.Clear();
         Scores = Sql.HighScores(SavedFile[0].Replace("PlayerID,", ""));
         LeaderBoardBackGround = new(new Color(10, 20, 5, 180), con, sp, 500, 500, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         Back = new("Fonts/TitleFont", "Back", con, sp, 100, 980, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
         var Ypos = 320;
-        if (!First)
-        {
             for (int i = 0; i < Scores.Count; i++)
             {
                 if (i == 0)
@@ -49,18 +48,6 @@ class LeaderBoardHomeScreen : IScreen
                     Ypos += 60;
                     HighScores.Add(new TextBox("Fonts/TitleFont", "Weekly High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
                 }
-            }
-        }
-        if (First)
-        {
-            for (int i = 0; i < Scores.Count; i++)
-            {
-                if (i != 0 || i != 1 || i != 5)
-                {
-                    HighScores[i].ChangeText(i + 1 + ": " + Scores[i][0] + "......" + Scores[i][1]);
-                }
-            }
-            First = false;
         }
     }
 

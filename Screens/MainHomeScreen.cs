@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using _Sprites;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -36,59 +36,71 @@ class MainHomeScreen : IScreen
     private Thing SettingsSymbol;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
-        AvailableSkins.Clear();
-        SavedFile = HomeScreen.saveFile();
-        //Create Buttons
-        test = new TextBox("Fonts/TitleFont", "Test", con, sp, 200, 400, Color.Red, 2);
-        PlayGame = new("Fonts/TitleFont", "Start Game", con, sp, Game1.ScreenWidth / 2, 600, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
-        NewGame = new("Fonts/TitleFont", "New Game", con, sp, Game1.ScreenWidth / 2, 750, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
-        //Set Swapping feature
-        LeftArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 - 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Left Arrow");
-        RightArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 + 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Right Arrow");
-        SkinBackGround = new BlankBox(new Color(9, 20, 9, 100), con, sp, 200, 200, Game1.ScreenWidth / 2, 200);
-        //set up skins to lookthrough
-        var SkinIds = Sql.GetAvailableSkin(SavedFile[0].Replace("PlayerID,", ""));
-        //Create Other UI features
-        LeaderBoard = new("Fonts/TitleFont", "", con, sp, 1850, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
-        LeaderBoardSymbol = new("Buttons/Trophie", con, sp, 75, 75, 1849, 978);
-        Settings = new("Fonts/TitleFont", "", con, sp, 300, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
-        SettingsSymbol = new("Buttons/Settings Cog", con, sp, 75, 75, 299, 978);
-        //initilaise skin values to the list if they are 'unlocked'
-        foreach (int ID in SkinIds)
+        if (!Game1.LogIn)
         {
-            AvailableSkins.Add(new Skin(ID));
-        }
-        //load the last used skin
-        if (SavedFile.Count > 1 && !String.IsNullOrWhiteSpace(SavedFile[1]))
-        {
+
+            AvailableSkins.Clear();
+            SavedFile = HomeScreen.saveFile();
             if (!NewScreen)
             {
-                var Skin = SavedFile[1].Replace("Skin,", "");//remove the pretext before the skin location
-                ActiveSkinIndex = 0;
-                foreach (var skin in AvailableSkins)
-                {
-                    if (skin.BaseSkin == Skin)
-                    { //the variableSkins base skin is the same as the searchd for skin
-                        ActiveSkinIndex = AvailableSkins.IndexOf(skin);
-                        break;
-                    }
-                }
-                CurrentSkin = new Sprite(AvailableSkins[ActiveSkinIndex].BaseSkin, con, sp, 150, 150, Game1.ScreenWidth / 2, 200);
+                //Create Buttons
+                NewGame = new("Fonts/TitleFont", "New Game", con, sp, Game1.ScreenWidth / 2, 750, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
+                PlayGame = new("Fonts/TitleFont", "Start Game", con, sp, Game1.ScreenWidth / 2, 600, Color.Black, 2, 300, 150, new Color(212, 152, 177), Color.DarkGoldenrod);
+                RightArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 + 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Right Arrow");
+                LeftArrow = new Button("Fonts/TitleFont", "", con, sp, Game1.ScreenWidth / 2 - 220, 200, Color.Red, 2, 300, 300, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Left Arrow");
+                LeaderBoard = new("Fonts/TitleFont", "", con, sp, 1850, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
+                Settings = new("Fonts/TitleFont", "", con, sp, 300, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
+                //UI
+                test = new TextBox("Fonts/TitleFont", "Test", con, sp, 200, 400, Color.Red, 2);
+                SkinBackGround = new BlankBox(new Color(9, 20, 9, 100), con, sp, 200, 200, Game1.ScreenWidth / 2, 200);
+                //Create Other UI features
+                LeaderBoardSymbol = new("Buttons/Trophie", con, sp, 75, 75, 1849, 978);
+                SettingsSymbol = new("Buttons/Settings Cog", con, sp, 75, 75, 299, 978);
             }
-        }
-        else
-        {
-            CurrentSkin = new Sprite(AvailableSkins[0].BaseSkin, con, sp, 150, 150, Game1.ScreenWidth / 2, 200);
+            else
+            {
+                NewGame.AddButton();
+                PlayGame.AddButton();
+                RightArrow.AddButton();
+                LeftArrow.AddButton();
+                LeaderBoard.AddButton();
+                Settings.AddButton();
+            }
+            //set up skins to lookthrough
+            var SkinIds = Sql.GetAvailableSkin(SavedFile[0].Replace("PlayerID,", ""));
+            //initilaise skin values to the list if they are 'unlocked'
+            foreach (int ID in SkinIds)
+            {
+                AvailableSkins.Add(new Skin(ID));
+            }
+            //load the last used skin
+            if (SavedFile.Count > 1 && !String.IsNullOrWhiteSpace(SavedFile[1].Split(",")[1]))
+            {
+                if (!NewScreen)
+                {
+                    var Skin = SavedFile[1].Replace("Skin,", "");//remove the pretext before the skin location
+                    ActiveSkinIndex = 0;
+                    foreach (var skin in AvailableSkins)
+                    {
+                        if (skin.BaseSkin == Skin)
+                        { //the variableSkins base skin is the same as the searchd for skin
+                            ActiveSkinIndex = AvailableSkins.IndexOf(skin);
+                            break;
+                        }
+                    }
+                    CurrentSkin = new Sprite(AvailableSkins[ActiveSkinIndex].BaseSkin, con, sp, 150, 150, Game1.ScreenWidth / 2, 200);
+                }
+            }
+            else
+            {
+                CurrentSkin = new Sprite(AvailableSkins[0].BaseSkin, con, sp, 150, 150, Game1.ScreenWidth / 2, 200);
+            }
+            NewScreen = false;
         }
     }
 
     public void Update(float delta)
     {
-        if (NewScreen)
-        {
-            LoadContent(Game1.GetContentManager(), Game1.GetSpriteBatch());
-            NewScreen = false;
-        }
         Button.Update();
         if (ButtonPressDelay < ButtonElapsedTime)
         {

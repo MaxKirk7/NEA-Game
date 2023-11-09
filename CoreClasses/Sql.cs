@@ -76,7 +76,7 @@ class Sql
     public static List<int> GetAvailableSkin(string PlayerID)
     {
         List<int> AchievementIDs = new List<int>();
-        var PID = Int32.Parse(PlayerID);
+        var t = Int32.TryParse(PlayerID,out var PID);
 
         using (SqlConnection con = new SqlConnection(connection))
         {

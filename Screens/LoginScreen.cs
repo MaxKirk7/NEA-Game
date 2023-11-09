@@ -12,6 +12,7 @@ namespace NEAScreen
 {
     class LoginScreen : IScreen
     {
+        private bool FirstLoop;
         private bool NewScreen = false;
         private bool ScreenOver = false;
         private Button SignUp;
@@ -48,33 +49,41 @@ namespace NEAScreen
                     ScreenOver = true;
                 }
             }
-            //Common Things that aren't going to change
-            BackGround = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
-            LoginBox = new BlankBox(new Color(10, 20, 5, 180), con, sp, 1000, 800, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
-            //MainHeader Parts
-            Header = new TextBox("Fonts/TitleFont", "Salam Armada", con, sp, Game1.ScreenWidth / 2, 200, Color.Black, 1.8);
-            HeaderBox = new BlankBox(Color.BlueViolet, con, sp, 300, 50, Game1.ScreenWidth / 2, 200);
-            SignIn = new Button("Fonts/TitleFont", "Log In", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
-            SignUp = new Button("Fonts/TitleFont", "Sign Up", con, sp, Game1.ScreenWidth / 3 * 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
-            Enter = new Button("Fonts/TitleFont", "Enter", con, sp, Game1.ScreenWidth / 2, (int)((Game1.ScreenHeight / 3) * 2.25), Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+            if (!NewScreen)
+            {
+                //Common Things that aren't going to change
+                BackGround = new Thing("LoadingScreen/Sprites/BackGroundSpace", con, sp, Game1.ScreenWidth, Game1.ScreenHeight, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
+                LoginBox = new BlankBox(new Color(10, 20, 5, 180), con, sp, 1000, 800, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
+                //MainHeader Parts
+                Header = new TextBox("Fonts/TitleFont", "Salam Armada", con, sp, Game1.ScreenWidth / 2, 200, Color.Black, 1.8);
+                HeaderBox = new BlankBox(Color.BlueViolet, con, sp, 300, 50, Game1.ScreenWidth / 2, 200);
+                //stuff that is drawn when any button is pressed
+                UsernameBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 500);
+                PasswordBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 650);
+                // only when signing up
+                EmailBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 350);
+
+                SignIn = new Button("Fonts/TitleFont", "Log In", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+                SignUp = new Button("Fonts/TitleFont", "Sign Up", con, sp, Game1.ScreenWidth / 3 * 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+                Enter = new Button("Fonts/TitleFont", "Enter", con, sp, Game1.ScreenWidth / 2, (int)((Game1.ScreenHeight / 3) * 2.25), Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+            }
+            else
+            {
+                SignIn.AddButton();
+                SignUp.AddButton();
+            }
+            FirstLoop = true;
+            Username = new InputBox("Fonts/TitleFont", "Enter Your Username...", con, sp, Game1.ScreenWidth / 2, 500, Color.Black, 1, 300, 100, 15);
+            Password = new InputBox("Fonts/TitleFont", "Enter Your Password...", con, sp, Game1.ScreenWidth / 2, 650, Color.Black, 1, 300, 100, 25);
+            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2 - 50, 350, Color.Black, 0.8, 300, 100, 50);
             //hide Enter Button as the game starts
             Enter.RemoveButton();
-            //stuff that is drawn when any button is pressed
-            UsernameBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 500);
-            Username = new InputBox("Fonts/TitleFont", "Enter Your Username...", con, sp, Game1.ScreenWidth / 2, 500, Color.Black, 1, 300, 100, 15);
-            PasswordBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 650);
-            Password = new InputBox("Fonts/TitleFont", "Enter Your Password...", con, sp, Game1.ScreenWidth / 2, 650, Color.Black, 1, 300, 100, 25);
-            // only when signing up
-            EmailBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 350);
-            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2 - 50, 350, Color.Black, 0.8, 300, 100, 50);
+            NewScreen = false;
+
         }
 
         public void Update(float delta)
         {
-            if (NewScreen){
-                LoadContent(Game1.GetContentManager(),Game1.GetSpriteBatch());
-                NewScreen = false;
-            }
             Button.Update();
             if (SignIn.ButtonPressed() || SignUp.ButtonPressed())
             {
@@ -83,10 +92,13 @@ namespace NEAScreen
                     SigningUp = true;
                     Email.Update(delta);
                 }
-
-                SignIn.RemoveButton();
-                SignUp.RemoveButton();
-                Enter.AddButton();
+                if (FirstLoop)
+                {
+                    SignIn.RemoveButton();
+                    SignUp.RemoveButton();
+                    Enter.AddButton();
+                    FirstLoop = false;
+                }
                 Username.Update(delta);
                 Password.Update(delta);
                 if (Enter.ButtonPressed())
@@ -117,7 +129,7 @@ namespace NEAScreen
                                 ScreenOver = true;
                             }
                         }
-                        else
+                        else if (SigningUp)
                         {
                             // Handle sign-up logic
                             if (result == "null")
@@ -128,7 +140,7 @@ namespace NEAScreen
                                 if (NewAccount) // if the account details are new
                                 {
                                     string PlayerID = Sql.PlayerIDQuery(Username.GetInput(), Password.GetInput());
-                                    SavedFile.Add($"PlayerID,{PlayerID}");
+                                    SavedFile[0] = $"PlayerID,{PlayerID}";
                                     Sql.AddAchievment(PlayerID, "1");
                                     ScreenOver = true;
                                 }
@@ -175,13 +187,17 @@ namespace NEAScreen
 
         public bool EndScreen()
         {
+            var Over = ScreenOver;
             if (ScreenOver)
             {
+                ScreenOver = false;
                 NewScreen = true;
+                SigningUp = false;
+                InputBox.RemoveBoxes();
                 File.WriteAllLines("SavedInfo.txt", SavedFile);
                 Button.EndButtons();
             }
-            return ScreenOver;
+            return Over;
         }
 
         private bool IsValidInput()
