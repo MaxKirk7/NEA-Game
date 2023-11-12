@@ -71,4 +71,7 @@ class Button : TextBox
     public bool IsButtonActive(){
         return IsActive;
     }
+    public void ManualUnpress(){
+        IsPressed = false;
+    }
 }

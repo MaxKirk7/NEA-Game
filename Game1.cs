@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -61,7 +62,7 @@ namespace NEAGame
                 {
                     file.Add(line);
                 }
-                if (file.Count == 0)
+                if (file.Count == 0 || file[0].Split(",")[1].IsNullOrEmpty())
                 { // if new game
                     var newfile = "PlayerID,\nSkin,\nGamesPlayed,0\nMusic,true\nSoundEFX,true";
                     using StreamWriter Stream = new(stream);

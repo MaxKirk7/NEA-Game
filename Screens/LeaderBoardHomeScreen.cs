@@ -9,7 +9,6 @@ using SQLQuery;
 namespace NEAScreen;
 class LeaderBoardHomeScreen : IScreen
 {
-    private bool First;
     private bool ScreenOver = false;
     private BlankBox LeaderBoardBackGround;
     private List<string> SavedFile = HomeScreen.saveFile();
@@ -80,7 +79,6 @@ class LeaderBoardHomeScreen : IScreen
             Button.EndButtons();
             Scores.Clear();
             HighScores.Clear();
-            First = true;
         }
         return Over;
     }

@@ -4,6 +4,7 @@ using _Sprites;
 using NEAGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
+using SQLQuery;
 
 namespace NEAScreen
 {
@@ -25,7 +26,6 @@ namespace NEAScreen
             LoadingSound = con.Load<Song>("LoadingScreen/Sounds/IntroSong");
             MediaPlayer.Volume = 1F;
             MediaPlayer.Play(LoadingSound);
-
         }
         public void Draw(SpriteBatch sp)
         //spinning animation as the game loads
@@ -39,6 +39,10 @@ namespace NEAScreen
         }
         public void Update(float delta)
         {
+            if (!Sql.HasReset)
+            {
+                Sql.UpdateWeeklyLeaderboard();
+            }
             LoadingTime--;
             if (LoadingTime <= 0)
             {

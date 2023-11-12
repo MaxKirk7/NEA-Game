@@ -1,5 +1,5 @@
-PlayerID,1076
-Skin,Player/Skins/Base/Base Skin
+PlayerID,
+Skin,
 GamesPlayed,1
 Music,true
 SoundEFX,true

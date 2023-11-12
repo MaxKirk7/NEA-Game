@@ -1,5 +1,5 @@
-PlayerID,
-Skin,
-GamesPlayed,0
+PlayerID,1078
+Skin,Player/Skins/Base/Best Ship
+GamesPlayed,1
 Music,true
 SoundEFX,true

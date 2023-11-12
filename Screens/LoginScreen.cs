@@ -28,6 +28,7 @@ namespace NEAScreen
         private TextBox Header;
         private BlankBox EmailBox;
         private InputBox Email;
+        private Button Back;
         private bool SigningUp = false;
         private readonly List<string> SavedFile = new();
 
@@ -62,7 +63,8 @@ namespace NEAScreen
                 PasswordBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 650);
                 // only when signing up
                 EmailBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 350);
-
+                //other buttons
+                Back = new Button("Fonts/TitleFont", "Back", con, sp, 100, 980, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
                 SignIn = new Button("Fonts/TitleFont", "Log In", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
                 SignUp = new Button("Fonts/TitleFont", "Sign Up", con, sp, Game1.ScreenWidth / 3 * 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
                 Enter = new Button("Fonts/TitleFont", "Enter", con, sp, Game1.ScreenWidth / 2, (int)((Game1.ScreenHeight / 3) * 2.25), Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
@@ -78,6 +80,7 @@ namespace NEAScreen
             Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2 - 50, 350, Color.Black, 0.8, 300, 100, 50);
             //hide Enter Button as the game starts
             Enter.RemoveButton();
+            Back.RemoveButton();
             NewScreen = false;
 
         }
@@ -97,6 +100,7 @@ namespace NEAScreen
                     SignIn.RemoveButton();
                     SignUp.RemoveButton();
                     Enter.AddButton();
+                    Back.AddButton();
                     FirstLoop = false;
                 }
                 Username.Update(delta);
@@ -157,6 +161,12 @@ namespace NEAScreen
                         }
                     }
                 }
+            }
+            if (Back.ButtonPressed())
+            {
+                Back.ManualUnpress();
+                ScreenOver = true;
+                Game1.LogIn = true;
             }
         }
 

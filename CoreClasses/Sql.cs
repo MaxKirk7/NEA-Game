@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using Serilog;
 namespace SQLQuery;
 class Sql
 {
     private static string connection = "Data Source=MAX\\SQLEXPRESS,1433;Initial Catalog=NEA;User Id=NEAGame;Password=Chelsea_1;Encrypt = False;";
+    public static bool HasReset{get;private set;}
     public Sql()
     {
     }
@@ -76,7 +78,7 @@ class Sql
     public static List<int> GetAvailableSkin(string PlayerID)
     {
         List<int> AchievementIDs = new List<int>();
-        var t = Int32.TryParse(PlayerID,out var PID);
+        var t = Int32.TryParse(PlayerID, out var PID);
 
         using (SqlConnection con = new SqlConnection(connection))
         {
@@ -271,7 +273,7 @@ class Sql
         using (SqlConnection con = new(connection))
         {
             con.Open();
-            using (SqlCommand command = new(Personal,con))
+            using (SqlCommand command = new(Personal, con))
             {
                 command.Parameters.AddWithValue("@PlayerID", PID);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -405,5 +407,61 @@ class Sql
         }
         else { File[2] = "GamesPlayed,0"; }
         return File;
+    }
+    public static void UpdateWeeklyLeaderboard()
+    {
+        HasReset = true;
+        //get the last time the Leaderboard was reset
+        DateTime LastDate;
+        var TodaysDate = DateTime.UtcNow;
+        var MondayDate = 0;
+        {
+            using (SqlConnection con = new(connection))
+            {
+                var DateQuery = "select LastWeeklyReset from [GameInfo Tbl]";
+                con.Open();
+                using (SqlCommand CheckDate = new(DateQuery,con))
+                {
+                    using (SqlDataReader reader = CheckDate.ExecuteReader())
+                    {
+                        reader.Read();
+                        LastDate = reader.GetDateTime(0);
+                    }
+                }
+                con.Close();
+            }
+            // want to reset every Monday, find the first occurence of a monday
+            for (int i = 1; i < 7; i++)
+            {
+                var Day = new DateTime(TodaysDate.Year, 1, i);
+                if (Day.DayOfWeek.ToString() == "Sunday")
+                {
+                    MondayDate = i;
+                    break;
+                }
+            }
+            // current day of year subtract monday date when modulous calculated will equal 0
+            //or if the last date erased is over 7 days
+            if (((TodaysDate.DayOfYear - MondayDate) % 7 == 0 && TodaysDate.Date != LastDate.Date) || (TodaysDate.DayOfYear - LastDate.DayOfYear) >= 7)
+            {
+                Log.Information("Reset");
+                //reset weekly leaderboard
+                var Query = "Update [Player Info Tbl] set WeeklyHighScore = null";
+                using (SqlConnection con = new(connection))
+                {
+                    con.Open();
+                    using (SqlCommand command = new(Query, con))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    var UpdateDateQuery = "update [GameInfo Tbl] set LastWeeklyReset = @Date";
+                    using (SqlCommand UpdateDate = new(UpdateDateQuery,con)){
+                        UpdateDate.Parameters.AddWithValue("@Date",TodaysDate.Date);
+                        UpdateDate.ExecuteNonQuery();
+                    }
+                    con.Close();
+                }
+            }
+        }
     }
 }
