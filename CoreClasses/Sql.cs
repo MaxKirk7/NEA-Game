@@ -6,7 +6,8 @@ namespace SQLQuery;
 class Sql
 {
     private static string connection = "Data Source=MAX\\SQLEXPRESS,1433;Initial Catalog=NEA;User Id=NEAGame;Password=Chelsea_1;Encrypt = False;";
-    public static bool HasReset{get;private set;}
+    public static bool HasReset { get; private set; }
+    public static bool IsVerified { get; private set; }
     public Sql()
     {
     }
@@ -420,7 +421,7 @@ class Sql
             {
                 var DateQuery = "select LastWeeklyReset from [GameInfo Tbl]";
                 con.Open();
-                using (SqlCommand CheckDate = new(DateQuery,con))
+                using (SqlCommand CheckDate = new(DateQuery, con))
                 {
                     using (SqlDataReader reader = CheckDate.ExecuteReader())
                     {
@@ -455,12 +456,63 @@ class Sql
                         command.ExecuteNonQuery();
                     }
                     var UpdateDateQuery = "update [GameInfo Tbl] set LastWeeklyReset = @Date";
-                    using (SqlCommand UpdateDate = new(UpdateDateQuery,con)){
-                        UpdateDate.Parameters.AddWithValue("@Date",TodaysDate.Date);
+                    using (SqlCommand UpdateDate = new(UpdateDateQuery, con))
+                    {
+                        UpdateDate.Parameters.AddWithValue("@Date", TodaysDate.Date);
                         UpdateDate.ExecuteNonQuery();
                     }
                     con.Close();
                 }
+            }
+        }
+    }
+    public static void AddDevice(string MAC, string PlayerID)
+    {
+        CheckDevice(MAC, PlayerID);
+        if (!IsVerified)
+        {
+            var PID = int.Parse(PlayerID);
+            using (SqlConnection con = new(connection))
+            {
+                con.Open();
+                var query = "insert into [VerifiedMachines Tbl] values (@Player,@Adr)";
+                using (SqlCommand command = new(query, con))
+                {
+                    command.Parameters.AddWithValue("@Player", PID);
+                    command.Parameters.AddWithValue("@Adr", MAC);
+                    command.ExecuteNonQuery();
+                }
+                con.Close();
+            }
+        }
+    }
+    public static void CheckDevice(string MAC, string PlayerID)
+    {
+        IsVerified = false;
+        if (int.TryParse(PlayerID, out var PID))
+        {
+            var query = "select VerifiedMAC from [VerifiedMachines Tbl] where PlayerID = @PLayer";
+            using (SqlConnection con = new(connection))
+            {
+                con.Open();
+                using (SqlCommand command = new(query, con))
+                {
+                    command.Parameters.AddWithValue("@Player", PID);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        int Address = 0;
+                        while (reader.Read())
+                        {
+                            if (reader.GetString(Address) == MAC)
+                            {
+                                IsVerified = true;
+                                break;
+                            }
+                            Address++;
+                        }
+                    }
+                }
+                con.Close();
             }
         }
     }

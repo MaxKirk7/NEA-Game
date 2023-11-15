@@ -1,5 +1,0 @@
-PlayerID,
-Skin,
-GamesPlayed,1
-Music,true
-SoundEFX,true

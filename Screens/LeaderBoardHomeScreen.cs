@@ -11,7 +11,7 @@ class LeaderBoardHomeScreen : IScreen
 {
     private bool ScreenOver = false;
     private BlankBox LeaderBoardBackGround;
-    private List<string> SavedFile = HomeScreen.saveFile();
+    private List<string> SavedFile = HomeScreen.SaveFile();
     //Background
     //HighScores top 3 + own personal high score + top 3 weakly high
     //BackSymbol
@@ -22,7 +22,7 @@ class LeaderBoardHomeScreen : IScreen
     {
         HighScores.Clear();
         Scores.Clear();
-        Scores = Sql.HighScores(SavedFile[0].Replace("PlayerID,", ""));
+        Scores = Sql.HighScores(SavedFile[0].Replace("PlayerID,",""));
         LeaderBoardBackGround = new(new Color(10, 20, 5, 180), con, sp, 500, 500, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         Back = new("Fonts/TitleFont", "Back", con, sp, 100, 980, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
         var Ypos = 320;

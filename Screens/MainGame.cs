@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using _Sprites;
+using GameLogic;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -35,51 +37,43 @@ class MainGame : IScreen
         IsDead = false;
         CurrentScore = -1;
         SavedFile.Clear();
-        using (FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Read))
+        SavedFile = Logic.PullFile();
+        if (SavedFile[3].Split(",")[1].IsNullOrEmpty()){
+            SavedFile[3] = "GamesPlayed,0";
+        }
+        CurrentScore = Sql.GetAverageScore(SavedFile[0].Replace("PlayerID,", ""));
+        if (!NewGame)
         {
-            using (StreamReader reader = new(stream))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    SavedFile.Add(line);
-                }
-            }
-            if (SavedFile.Count < 3)
-            {
-                SavedFile.Add("GamesPlayed,0");
-            }
+            BulletTexture = con.Load<Texture2D>("Player/Bullet/Bullet");
+            Bullets.LoadTexture(BulletTexture);
+            AsteroidTexture = con.Load<Texture2D>("Player/Asteroid/Asteroid");
+            Asteroids.LoadTexture(AsteroidTexture);
+            Score = new("Fonts/TitleFont", CurrentScore.ToString(), con, sp, 30, 30, Color.Red, 3f);
+            var SFX = con.Load<SoundEffect>("Key Media/Shot");
+            Bullets.SetSoundEffect(SFX, SEFX);
+            PlayAgain = new("Fonts/TitleFont", "Play Again", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+            HomeScreen = new("Fonts/TitleFont", "Home Screen", con, sp, Game1.ScreenWidth * 2 / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+            Quit = new("Fonts/TitleFont", "Quit", con, sp, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+        }
+        else
+        {
+            Score.ChangeText(CurrentScore.ToString());
         }
         Player.GetFile(SavedFile);
         SEFX = bool.Parse(SavedFile[4].Split(",")[1]);
-        CurrentScore = Sql.GetAverageScore(SavedFile[0].Replace("PlayerID,", ""));
-        Score = new("Fonts/TitleFont", CurrentScore.ToString(), con, sp, 30, 30, Color.Red, 3f);
-        BulletTexture = con.Load<Texture2D>("Player/Bullet/Bullet");
-        Bullets.LoadTexture(BulletTexture);
-        var SFX = con.Load<SoundEffect>("Key Media/Shot");
-        Bullets.SetSoundEffect(SFX,SEFX);
-        AsteroidTexture = con.Load<Texture2D>("Player/Asteroid/Asteroid");
-        Asteroids.LoadTexture(AsteroidTexture);
-        PlayAgain = new("Fonts/TitleFont", "Play Again", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
-        HomeScreen = new("Fonts/TitleFont", "Home Screen", con, sp, Game1.ScreenWidth * 2 / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
-        Quit = new("Fonts/TitleFont", "Quit", con, sp, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
         PlayAgain.RemoveButton();
         HomeScreen.RemoveButton();
         Quit.RemoveButton();
+        ImmunityElapsedTime = 10;
+        Lives = 3;
+        Player.Reset();
+        Asteroids.Reset();
+        Bullets.Reset();
+        NewGame = false;
     }
 
     public void Update(float delta)
     {
-        if (NewGame)
-        {
-            NewGame = false;
-            ImmunityElapsedTime = 10;
-            Lives = 3;
-            Player.Reset();
-            Asteroids.Reset();
-            Bullets.Reset();
-            LoadContent(Game1.GetContentManager(), Game1.GetSpriteBatch());
-        }
         Game(delta);
         DeathScreen(delta);
     }
@@ -107,7 +101,7 @@ class MainGame : IScreen
             ScreenOver = true;
             NewGame = true;
             GameOver = false;
-            File.WriteAllLines("SavedInfo.txt", SavedFile);
+            Logic.PushFile(SavedFile);
             Button.EndButtons();
             SavedFile.Clear();
         }

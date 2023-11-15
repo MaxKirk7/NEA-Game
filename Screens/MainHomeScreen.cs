@@ -15,14 +15,13 @@ class MainHomeScreen : IScreen
     private double ButtonPressDelay = 0.2;
     private bool ScreenOver = false;
     //Skins need to be loaded from database
-    private bool LeaderBoardSelected = false;
-    private bool SettingsSelected = false;
+    private static bool LeaderBoardSelected = false;
+    private static bool SettingsSelected = false;
     private readonly Sql Query = new();
     private static readonly List<Skin> AvailableSkins = new();
     private List<string> SavedFile;
     private Sprite CurrentSkin;
     private BlankBox SkinBackGround;
-    private TextBox test;
     private Button LeftArrow;
     private Button RightArrow;
     private static int ActiveSkinIndex;
@@ -38,7 +37,7 @@ class MainHomeScreen : IScreen
         {
 
             AvailableSkins.Clear();
-            SavedFile = HomeScreen.saveFile();
+            SavedFile = HomeScreen.SaveFile();
             if (!NewScreen)
             {
                 //Create Buttons
@@ -49,7 +48,6 @@ class MainHomeScreen : IScreen
                 LeaderBoard = new("Fonts/TitleFont", "", con, sp, 1850, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
                 Settings = new("Fonts/TitleFont", "", con, sp, 300, 980, Color.Black, 0, 75, 75, new Color(212, 152, 177), Color.DarkGoldenrod, "Buttons/Rounded Square Button");
                 //UI
-                test = new TextBox("Fonts/TitleFont", "Test", con, sp, 200, 400, Color.Red, 2);
                 SkinBackGround = new BlankBox(new Color(9, 20, 9, 100), con, sp, 200, 200, Game1.ScreenWidth / 2, 200);
                 //Create Other UI features
                 LeaderBoardSymbol = new("Buttons/Trophie", con, sp, 75, 75, 1849, 978);
@@ -165,7 +163,6 @@ class MainHomeScreen : IScreen
             Button.ButtonDraw();
             LeaderBoardSymbol.Draw();
             SettingsSymbol.Draw();
-            test.Draw();
             CurrentSkin.Draw();
             sp.End();
         }
@@ -182,13 +179,13 @@ class MainHomeScreen : IScreen
         }
         return IsOver;
     }
-    public bool IsLeaderBoardSelected()
+    public static bool IsLeaderBoardSelected()
     {
         var Selected = LeaderBoardSelected;
         LeaderBoardSelected = false;
         return Selected;
     }
-    public bool IsSettingsSelected()
+    public static bool IsSettingsSelected()
     {
         var Selected = SettingsSelected;
         SettingsSelected = false;

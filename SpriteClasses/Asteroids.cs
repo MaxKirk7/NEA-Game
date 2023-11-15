@@ -42,6 +42,7 @@ class Asteroids
                 Position.Y = Random.Next(Game1.ScreenHeight * 2 / 12, Game1.ScreenHeight * 10 / 12);
                 if (Random.Next() % 2 == 0)
                 {
+                    //spawn in the outer 2/12ths of the screen to give the player a chance to react / not be spawn killed
                     Position.X = Game1.ScreenWidth * 2 / 12;
                 }
                 else

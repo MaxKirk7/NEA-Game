@@ -1,5 +1,5 @@
-PlayerID,1078
-Skin,Player/Skins/Base/Best Ship
-GamesPlayed,1
-Music,true
-SoundEFX,true
+UGxheWVySUQs
+U2tpbiw=
+R2FtZXNQbGF5ZWQsMA==
+TXVzaWMsdHJ1ZQ==
+U291bmRFRlgsdHJ1ZQ==

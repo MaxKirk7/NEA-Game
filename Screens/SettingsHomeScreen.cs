@@ -6,6 +6,7 @@ using NEAGame;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
+using GameLogic;
 
 namespace NEAScreen;
 class SetttingsHomeScreen : IScreen
@@ -13,7 +14,7 @@ class SetttingsHomeScreen : IScreen
     private MouseState OldMouse;
     private static bool NewScreen = false;
     private bool ScreenOver = false;
-    private static List<string> SaveFile = new(5);
+    private static List<string> SavedFile = new(5);
     private BlankBox Backdrop;
     private Button Music;
     private Button SoundEFX;
@@ -33,31 +34,21 @@ class SetttingsHomeScreen : IScreen
             SignOut = new Button("Fonts/TitleFont", "Log Out", con, sp, 100, 200, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
             Back = new("Fonts/TitleFont", "Back", con, sp, 100, 980, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
         }
-        SaveFile.Clear();
-        using (FileStream stream = new FileStream("SavedInfo.txt", FileMode.Open, FileAccess.ReadWrite))
+        SavedFile.Clear();
+        SavedFile = Logic.PullFile();
+        if (SavedFile.Count < 5)
         {
-            using (StreamReader reader = new(stream))
+            while (SavedFile.Count != 5)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                if (SavedFile.Count < 3)
                 {
-                    SaveFile.Add(line);
+                    SavedFile.Add("Temp");
                 }
-            }
-        }
-        if (SaveFile.Count < 5)
-        {
-            while (SaveFile.Count != 5)
-            {
-                if (SaveFile.Count < 3)
+                else if (SavedFile.Count < 4)
                 {
-                    SaveFile.Add("Temp");
+                    SavedFile.Add("Music,false");
                 }
-                else if (SaveFile.Count < 4)
-                {
-                    SaveFile.Add("Music,false");
-                }
-                SaveFile.Add("SoundEfX,false");
+                SavedFile.Add("SoundEfX,false");
             }
         }
         if (NewScreen)
@@ -77,11 +68,11 @@ class SetttingsHomeScreen : IScreen
         {
             if (OldMouse != Mouse.GetState() || OldMouse.LeftButton == ButtonState.Released)
             {
-                if (SaveFile[3] == "Music,true")
+                if (SavedFile[3] == "Music,true")
                 {
-                    SaveFile[3] = "Music,false";
+                    SavedFile[3] = "Music,false";
                 }
-                else { SaveFile[3] = "Music,true"; }
+                else { SavedFile[3] = "Music,true"; }
                 Game1.Mute();
             }
         }
@@ -89,13 +80,13 @@ class SetttingsHomeScreen : IScreen
         {
             if (OldMouse != Mouse.GetState() || OldMouse.LeftButton == ButtonState.Released)
             {
-                if (SaveFile[4] == "SoundEFX,false")
+                if (SavedFile[4] == "SoundEFX,false")
                 {
-                    SaveFile[4] = "SoundEFX,true";
+                    SavedFile[4] = "SoundEFX,true";
                 }
                 else
                 {
-                    SaveFile[4] = "SoundEFX,false";
+                    SavedFile[4] = "SoundEFX,false";
                 }
             }
         }
@@ -107,9 +98,9 @@ class SetttingsHomeScreen : IScreen
         {
             ScreenOver = true;
             Game1.LogIn = true;
-            SaveFile[0] = "PlayerID,";
-            SaveFile[1] = "Skin,";
-            SaveFile[2] = "GamesPlayed,0";
+            SavedFile[0] = "PlayerID,";
+            SavedFile[1] = "Skin,";
+            SavedFile[2] = "GamesPlayed,0";
         }
         else
         {
@@ -133,23 +124,14 @@ class SetttingsHomeScreen : IScreen
         if (Over)
         {
             Button.EndButtons();
-            using FileStream stream = new("SavedInfo.txt", FileMode.Truncate, FileAccess.Write);
-            using StreamWriter writer = new(stream);
-            foreach (string s in SaveFile)
-            {
-                if (s != "")
-                {
-                    writer.WriteLine(s);
-                }
-            }
-            writer.Flush();
+            Logic.PushFile(SavedFile);
             NewScreen = true;
         }
         return Over;
     }
     public static List<string> ReturnFile()
     {
-        return SaveFile;
+        return SavedFile;
     }
 
 }

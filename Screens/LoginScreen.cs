@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
+using GameLogic;
 
 namespace NEAScreen
 {
@@ -30,25 +31,15 @@ namespace NEAScreen
         private InputBox Email;
         private Button Back;
         private bool SigningUp = false;
-        private readonly List<string> SavedFile = new();
+        private List<string> SavedFile = new();
 
         public void LoadContent(ContentManager con, SpriteBatch sp)
         {
             SavedFile.Clear();
-            using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate))
+            SavedFile = Logic.PullFile();
+            if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0].Split(",")[1]) && Sql.IsVerified)
             {
-                using (StreamReader reader = new(stream))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        SavedFile.Add(line);
-                    }
-                }
-                if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0].Split(",")[1]))
-                {
-                    ScreenOver = true;
-                }
+                ScreenOver = true;
             }
             if (!NewScreen)
             {
@@ -204,7 +195,8 @@ namespace NEAScreen
                 NewScreen = true;
                 SigningUp = false;
                 InputBox.RemoveBoxes();
-                File.WriteAllLines("SavedInfo.txt", SavedFile);
+                Logic.AuthenticateMachine(SavedFile[0].Split(",")[1]);
+                Logic.PushFile(SavedFile);
                 Button.EndButtons();
             }
             return Over;

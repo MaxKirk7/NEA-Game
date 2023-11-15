@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using GameLogic;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -10,12 +10,13 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using NEAScreen;
 using Serilog;
+using SQLQuery;
 namespace NEAGame
 {
     public class Game1 : Game
     {
         //by using dictionary screens are only generated when needed/ used
-        private readonly Dictionary<Type, Lazy<IScreen>> MainScreens = new Dictionary<Type, Lazy<IScreen>>(){//https://learn.microsoft.com/en-us/dotnet/api/system.lazy-1?view=net-7.0
+        private readonly Dictionary<Type, Lazy<IScreen>> MainScreens = new Dictionary<Type, Lazy<IScreen>>(){
             {typeof(LoadingScreen),new Lazy<IScreen>(() => new LoadingScreen())},
             {typeof(HomeScreen),new Lazy<IScreen>(() => new HomeScreen())},
             {typeof(LoginScreen),new Lazy<IScreen>(() => new LoginScreen())},
@@ -54,21 +55,7 @@ namespace NEAGame
             Window.Title = "NEA Game";
             screens = new ScreenManager();
             Con = Content;
-            using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                using StreamReader reader = new(stream);
-                var line = "";
-                while ((line = reader.ReadLine()) != null)
-                {
-                    file.Add(line);
-                }
-                if (file.Count == 0 || file[0].Split(",")[1].IsNullOrEmpty())
-                { // if new game
-                    var newfile = "PlayerID,\nSkin,\nGamesPlayed,0\nMusic,true\nSoundEFX,true";
-                    using StreamWriter Stream = new(stream);
-                    Stream.Write(newfile);
-                }
-            }
+            file = Logic.PullFile();
             base.Initialize();
         }
 
@@ -85,19 +72,7 @@ namespace NEAGame
 
         protected override void Update(GameTime gameTime)
         {
-            using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                file.Clear();
-                using StreamReader reader = new(stream);
-                var line = "";
-                while ((line = reader.ReadLine()) != null)
-                {
-                    file.Add(line);
-                }
-                if (file.Count > 5)
-                {
-                }
-            }
+            file = Logic.PullFile();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000F;
@@ -134,18 +109,27 @@ namespace NEAGame
             {
                 if (current == typeof(LoadingScreen))
                 {
+                    if (file.Count == 0 || file[0].Split(",")[1].IsNullOrEmpty() || !Sql.IsVerified)
+                    { // if new game
+                        var newfile = "PlayerID,\nSkin,\nGamesPlayed,0\nMusic,true\nSoundEFX,true";
+                        Logic.PushFile(newfile);
+                    }
                     MediaPlayer.Volume = 0.6F;
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Play(GameMusic);
+                    file=Logic.PullFile();
                     if (!bool.Parse(file[3].Split(",")[1]))
                     {
                         MediaPlayer.IsMuted = true;
+                    }
+                    if (!file[0].Split(",")[1].IsNullOrEmpty())
+                    {
+                        return typeof(HomeScreen);
                     }
                     return typeof(LoginScreen);
                 }
                 else if (current == typeof(LoginScreen))
                 {
-
                     return typeof(HomeScreen);
                 }
                 else if (current == typeof(HomeScreen))
@@ -183,13 +167,6 @@ namespace NEAGame
 
             base.Draw(gameTime);
         }
-
-        protected override void UnloadContent()
-        {
-            Content.Unload();
-            base.UnloadContent();
-        }
-
         public static SpriteBatch GetSpriteBatch()
         {
             return _spriteBatch;

@@ -5,6 +5,8 @@ using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
+using GameLogic;
+using System;
 
 namespace NEAScreen;
 class HomeScreen : IScreen
@@ -12,27 +14,21 @@ class HomeScreen : IScreen
     private bool NewScreen = false;
     private bool ScreenOver = false;
     private Thing Background;
-    private readonly List<IScreen> HomeScreens = new() { new MainHomeScreen(), new LeaderBoardHomeScreen(), new SetttingsHomeScreen() };
+    private readonly Dictionary<Type, Lazy<IScreen>> HomeScreens = new Dictionary<Type, Lazy<IScreen>>(){
+            {typeof(MainHomeScreen),new Lazy<IScreen>(() => new MainHomeScreen())},
+            {typeof(LeaderBoardHomeScreen),new Lazy<IScreen>(() => new LeaderBoardHomeScreen())},
+            {typeof(SetttingsHomeScreen),new Lazy<IScreen>(() => new SetttingsHomeScreen())}
+        };
     private ScreenManager HomeScreenManager;
     private static List<string> SavedFile = new();
-    private static Skin activeSkin;
+    private static Skin ActiveSkin;
     public void LoadContent(ContentManager con, SpriteBatch sp)
     {
         HomeScreenManager = new ScreenManager();
         SavedFile.Clear();
-        //Set b
-        using (FileStream stream = new("SavedInfo.txt", FileMode.Open, FileAccess.Read))
-        {
-            using (StreamReader reader = new(stream))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    SavedFile.Add(line);
-                }
-            }
-        }
-        HomeScreenManager.setScreen(HomeScreens[0], con, sp);
+        SavedFile = Logic.PullFile();
+        var initialScreenType = typeof(MainHomeScreen);
+        HomeScreenManager.setScreen(HomeScreens[initialScreenType].Value, con, sp);
         if (!NewScreen)
         {
             //Set backgrounds to use
@@ -44,42 +40,45 @@ class HomeScreen : IScreen
     public void Update(float delta)
     {
         HomeScreenManager.Update(delta);
-        var IndexCurrentScreen = HomeScreens.IndexOf(HomeScreenManager.currentScreen());
         if (HomeScreenManager.IsScreenOver())
         {
-            Log.Information("SubScreen finished");
             ScreenOver = true;
-            if (IndexCurrentScreen == 0)
+            var currentScreenType = HomeScreenManager.currentScreen().GetType();
+            var nextScreenType = GetNextScreenType(currentScreenType);
+            if (nextScreenType != null)
             {
-                var InstanceHomeScreen = (MainHomeScreen)HomeScreens[0];
-                if (InstanceHomeScreen.IsLeaderBoardSelected())
-                {
-                    ScreenOver = false;
-                    HomeScreenManager.setScreen(HomeScreens[1], Game1.GetContentManager(), Game1.GetSpriteBatch());
-                    Log.Information("LeaderboardScreen");
-                    //End Of game logic to be added
-                }
-                else if (InstanceHomeScreen.IsSettingsSelected())
-                {
-                    ScreenOver = false;
-                    HomeScreenManager.setScreen(HomeScreens[2], Game1.GetContentManager(), Game1.GetSpriteBatch());
-                    Log.Information("Setttings");
-                }
-            }
-            else if (IndexCurrentScreen != 0)
-            { // if the user selects back button ever go back to the main screen
-                Log.Information("Screen over");
                 ScreenOver = false;
-                HomeScreenManager.setScreen(HomeScreens[0], Game1.GetContentManager(), Game1.GetSpriteBatch());
-                if (IndexCurrentScreen == 2)
-                {
-                    SavedFile = SetttingsHomeScreen.ReturnFile();
-                    if (Game1.LogIn)
-                    {
-                        ScreenOver = true;
-                    }
-                }
+                var nextScreen = HomeScreens[nextScreenType].Value;
+                HomeScreenManager.setScreen(nextScreen, Game1.GetContentManager(), Game1.GetSpriteBatch());
             }
+        }
+    }
+
+    private Type GetNextScreenType(Type current)
+    {
+        if (current == typeof(MainHomeScreen))
+        {
+            if (MainHomeScreen.IsLeaderBoardSelected())
+            {
+                return typeof(LeaderBoardHomeScreen);
+            }
+            else if (MainHomeScreen.IsSettingsSelected())
+            {
+                return typeof(SetttingsHomeScreen);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        else
+        {
+            //always return to the original screen
+            if (current == typeof(SetttingsHomeScreen))
+            {
+                SavedFile = SetttingsHomeScreen.ReturnFile();
+            }
+            return typeof(MainHomeScreen);
         }
     }
     public void Draw(SpriteBatch sp)
@@ -95,35 +94,27 @@ class HomeScreen : IScreen
         if (ScreenOver)
         {
             ScreenOver = false;
-            activeSkin = MainHomeScreen.GetActiveSkin();
+            ActiveSkin = MainHomeScreen.GetActiveSkin();
             if (!Game1.LogIn)
             {
 
                 if (SavedFile.Count > 1)
                 {
-                    SavedFile[1] = $"Skin,{activeSkin.BaseSkin}";
+                    SavedFile[1] = $"Skin,{ActiveSkin.BaseSkin}";
                 }
                 else
                 {
-                    SavedFile.Add($"Skin,{activeSkin.BaseSkin}");
+                    SavedFile.Add($"Skin,{ActiveSkin.BaseSkin}");
                 }
             }
-            using FileStream stream = new("SavedInfo.txt", FileMode.Truncate, FileAccess.Write);
-            using StreamWriter writer = new(stream);
-            foreach (string s in SavedFile)
-            {
-                if (s != "")
-                {
-                    writer.WriteLine(s);
-                }
-            }
+            Logic.PushFile(SavedFile);
             Button.EndButtons();
             SavedFile.Clear();
             NewScreen = true;
         }
         return Over;
     }
-    public static List<string> saveFile()
+    public static List<string> SaveFile()
     {
         return SavedFile;
     }
