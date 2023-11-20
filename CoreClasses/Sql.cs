@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Azure.Core.Pipeline;
 using Microsoft.Data.SqlClient;
 using Serilog;
 namespace SQLQuery;
@@ -8,74 +12,7 @@ class Sql
     private static string connection = "Data Source=MAX\\SQLEXPRESS,1433;Initial Catalog=NEA;User Id=NEAGame;Password=Chelsea_1;Encrypt = False;";
     public static bool HasReset { get; private set; }
     public static bool IsVerified { get; private set; }
-    public Sql()
-    {
-    }
-    public static string PlayerIDQuery(string Username = "null", string Password = "null")
-    {
-        var result = "null";
-        var query = $"Select PlayerID From [Player Tbl] where Username = @User and Password = @Pass";
-        using (SqlConnection con = new SqlConnection(connection))
-        {
-            con.Open();
-            using (SqlCommand command = new SqlCommand(query, con))
-            {
-                command.Parameters.AddWithValue("@User", Username);
-                command.Parameters.AddWithValue("@Pass", Password);
-                SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    reader.Read();
-                    result = reader.GetInt32(0).ToString();
-                    reader.Close();
-                }
-                reader.Close();
-            }
-            con.Close();
-        }
-        return result;
-    }
-    public static void AddAchievment(string PlayerID, string AchievmentID)
-    {
-        //add a new entry for a achievment completed by a player.
-        //if not already exists!
-        //check its not already achieved
-        var PID = Int32.Parse(PlayerID);
-        var AID = Int32.Parse(AchievmentID);
-        var AddValue = false;
-        using (SqlConnection con = new SqlConnection(connection))
-        {
-            con.Open();
-            var query = "Use NEA select PlayerAchievmentID from [Player Achievment Tbl] where PlayerID = @player and AchievmentID =@achievment";
-            using (SqlCommand command = new SqlCommand(query, con))
-            {
-                command.Parameters.AddWithValue("@player", PID);
-                command.Parameters.AddWithValue("@achievment", AID);
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (!reader.HasRows)
-                    {//the query retruns null
-                        AddValue = true;
-                    }
-                }
-            }
-            if (AddValue)
-            //if its not achieved add the achievment
-            {
-                var query2 = "use NEA insert into [Player Achievment Tbl] (PlayerID,AchievmentID,DateObtained) values (@player,@achievment,@dateObtained);";
-                using (SqlCommand command = new SqlCommand(query2, con))
-                {
-                    var date = DateTime.Now.Date; //remove the prefix of time from it
-                    command.Parameters.AddWithValue("@player", PID);
-                    command.Parameters.AddWithValue("@achievment", AID);
-                    command.Parameters.AddWithValue("@dateObtained", date);
-                    command.ExecuteNonQuery();
-                }
-            }
-            con.Close();
-        }
-
-    }
+    private const int IndexJump = 3;
     public static List<int> GetAvailableSkin(string PlayerID)
     {
         List<int> AchievementIDs = new List<int>();
@@ -84,7 +21,7 @@ class Sql
         using (SqlConnection con = new SqlConnection(connection))
         {
             con.Open();
-            var query = "USE NEA SELECT AchievmentID FROM [Player Achievment Tbl] WHERE PlayerID = @player";
+            var query = "USE NEA SELECT AchievmentID FROM [PlayerAchievment Tbl] WHERE PlayerID = @player";
             using (SqlCommand command = new SqlCommand(query, con))
             {
                 command.Parameters.AddWithValue("@player", PID);
@@ -126,80 +63,6 @@ class Sql
             con.Close();
         }
         return Locations;
-    }
-    public static bool CreateAccount(string Username, string Password, string Email)
-    {
-        bool newAccount = false;
-        int newPlayerID = -1;
-
-        using (SqlConnection con = new SqlConnection(connection))
-        {
-            con.Open();
-            // Check if the username already exists
-            string usernameQuery = "SELECT PlayerID FROM [Player Tbl] WHERE Username = @User";
-            using (SqlCommand command = new SqlCommand(usernameQuery, con))
-            {
-                command.Parameters.AddWithValue("@User", Username);
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (!reader.HasRows)
-                    {
-                        // Username is not found, proceed to check email
-                        reader.Close(); // Close the previous reader
-                    }
-                }
-                string emailQuery = "SELECT PlayerID FROM [Player Info Tbl] WHERE Email = @Email";
-                using (SqlCommand emailCommand = new SqlCommand(emailQuery, con))
-                {
-                    emailCommand.Parameters.AddWithValue("@Email", Email);
-                    using (SqlDataReader emailReader = emailCommand.ExecuteReader())
-                    {
-                        if (!emailReader.HasRows)
-                        {
-                            // Both username and email are new, create the account
-                            newAccount = true;
-                            // Insert into [Player Tbl] and get the new PlayerID
-                        }
-                    }
-                }
-                if (newAccount)
-                {
-                    string createUserQuery = "insert into [Player Tbl] (Username, Password) Values (@User, @Pass);";
-                    using (SqlCommand createUserCommand = new SqlCommand(createUserQuery, con))
-                    {
-                        createUserCommand.Parameters.AddWithValue("@User", Username);
-                        createUserCommand.Parameters.AddWithValue("@Pass", Password);
-                        createUserCommand.ExecuteNonQuery();
-                    }
-                    var UserIDQuery = "select PlayerID from [Player Tbl] where Username = @User and Password = @Pass";
-                    using (SqlCommand GetUserID = new(UserIDQuery, con))
-                    {
-                        GetUserID.Parameters.AddWithValue("@User", Username);
-                        GetUserID.Parameters.AddWithValue("@Pass", Password);
-                        using (SqlDataReader PlayerIDReader = GetUserID.ExecuteReader())
-                        {
-                            PlayerIDReader.Read();
-                            newPlayerID = PlayerIDReader.GetInt32(0);
-                        }
-
-                        // Insert into [Player Info Tbl] with the new PlayerID
-                        string createEmailQuery = "INSERT INTO [Player Info Tbl] (Email, PlayerID,NickName,DateCreated) VALUES (@Email, @PlayerID,@NickName,@DateCreated)";
-                        using (SqlCommand createEmailCommand = new SqlCommand(createEmailQuery, con))
-                        {
-                            var date = DateTime.Now.Date;
-                            var NickName = Username.Substring(0, 4); // nickanme is first 4 leters of username
-                            createEmailCommand.Parameters.AddWithValue("@Email", Email);
-                            createEmailCommand.Parameters.AddWithValue("@PlayerID", newPlayerID);
-                            createEmailCommand.Parameters.AddWithValue("@NickName", NickName);
-                            createEmailCommand.Parameters.AddWithValue("@DateCreated", date);
-                            createEmailCommand.ExecuteNonQuery();
-                        }
-                    }
-                }
-            }
-            con.Close();
-        }
-        return newAccount;
     }
     public static List<List<string>> HighScores(string PlayerID)
     {
@@ -300,29 +163,6 @@ class Sql
             Scores.Add(null);
         }
         return Scores;
-    }
-    public static int GetScore(string PlayerID)
-    {
-        int Value = 0;
-        int PID = Int32.Parse(PlayerID);
-        var Query = "use NEA select HighScore from [Player Info Tbl] where PlayerID = @PlayerID and HighScore is not null";
-        using (SqlConnection con = new SqlConnection(connection))
-        {
-            con.Open();
-            using (SqlCommand command = new SqlCommand(Query, con))
-            {
-                command.Parameters.AddWithValue("@PlayerID", PID);
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        Value = reader.GetInt32(0);
-                    }
-                }
-            }
-            con.Close();
-        }
-        return Value;
     }
     public static int UpdateScore(List<string> file, int LastScore)
     {
@@ -435,7 +275,7 @@ class Sql
             for (int i = 1; i < 7; i++)
             {
                 var Day = new DateTime(TodaysDate.Year, 1, i);
-                if (Day.DayOfWeek.ToString() == "Sunday")
+                if (Day.DayOfWeek.ToString() == "Monday")
                 {
                     MondayDate = i;
                     break;
@@ -445,7 +285,6 @@ class Sql
             //or if the last date erased is over 7 days
             if (((TodaysDate.DayOfYear - MondayDate) % 7 == 0 && TodaysDate.Date != LastDate.Date) || (TodaysDate.DayOfYear - LastDate.DayOfYear) >= 7)
             {
-                Log.Information("Reset");
                 //reset weekly leaderboard
                 var Query = "Update [Player Info Tbl] set WeeklyHighScore = null";
                 using (SqlConnection con = new(connection))
@@ -471,18 +310,21 @@ class Sql
         CheckDevice(MAC, PlayerID);
         if (!IsVerified)
         {
-            var PID = int.Parse(PlayerID);
-            using (SqlConnection con = new(connection))
+            if (int.TryParse(PlayerID, out var PID))
             {
-                con.Open();
-                var query = "insert into [VerifiedMachines Tbl] values (@Player,@Adr)";
-                using (SqlCommand command = new(query, con))
+
+                using (SqlConnection con = new(connection))
                 {
-                    command.Parameters.AddWithValue("@Player", PID);
-                    command.Parameters.AddWithValue("@Adr", MAC);
-                    command.ExecuteNonQuery();
+                    con.Open();
+                    var query = "insert into [VerifiedMachines Tbl] values (@Player,@Adr)";
+                    using (SqlCommand command = new(query, con))
+                    {
+                        command.Parameters.AddWithValue("@Player", PID);
+                        command.Parameters.AddWithValue("@Adr", MAC);
+                        command.ExecuteNonQuery();
+                    }
+                    con.Close();
                 }
-                con.Close();
             }
         }
     }
@@ -515,5 +357,119 @@ class Sql
                 con.Close();
             }
         }
+    }
+    public static (bool, int) CheckForPlayerID(int PlayerID, string Username)
+    {
+        var data = (false, PlayerID);
+        var query = "select Username from [Player Tbl] where PlayerID = @Player";
+        using (SqlConnection con = new(connection))
+        {
+            con.Open();
+            using (SqlCommand command = new(query, con))
+            {
+                command.Parameters.AddWithValue("@Player", PlayerID);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        data.Item1 = true;
+                        if (reader.Read())
+                        {
+                            if (reader.GetString(0) != null && reader.GetString(0) != Username)
+                            {
+                                data = CheckForPlayerID(PlayerID + IndexJump, Username);
+                            }
+                        }
+                    }
+                }
+            }
+            con.Close();
+        }
+        return data;
+    }
+    public static void CreateAccount(int index, string username, string password, string email)
+    {
+        var PlayerTblQuery = "insert into [Player Tbl] values (@PlayerID,@User,@Pass)";
+        var PlayerInfoQuery = "insert into [Player Info Tbl] (Email,PlayerID,NickName,DateCreated) values (@Email,@PlayerID,@NickName,@DateCreated)";
+        using (SqlConnection con = new(connection))
+        {
+            con.Open();
+            using (SqlTransaction transaction = con.BeginTransaction())
+            {
+                using (SqlCommand PlayerTblCommand = new(PlayerTblQuery, con, transaction))
+                {
+                    PlayerTblCommand.Parameters.AddWithValue("@PlayerID", index);
+                    PlayerTblCommand.Parameters.AddWithValue("@User", username);
+                    PlayerTblCommand.Parameters.AddWithValue("@Pass", password);
+                    PlayerTblCommand.ExecuteNonQuery();
+                }
+                using (SqlCommand PlayerInfoCommand = new(PlayerInfoQuery, con, transaction))
+                {
+                    var date = DateTime.Now.Date;
+                    var NickName = username.Substring(0, 4); // nickanme is first 4 leters of username
+                    PlayerInfoCommand.Parameters.AddWithValue("@Email", email);
+                    PlayerInfoCommand.Parameters.AddWithValue("@PlayerID", index);
+                    PlayerInfoCommand.Parameters.AddWithValue("@NickName", NickName);
+                    PlayerInfoCommand.Parameters.AddWithValue("@DateCreated", date);
+                    PlayerInfoCommand.ExecuteNonQuery();
+                }
+                transaction.Commit();
+            }
+            con.Close();
+        }
+        AddAchievment(index, 1);
+    }
+    public static void AddAchievment(int index, int achievmentID)
+    {
+        var AddValue = false;
+        using (SqlConnection con = new SqlConnection(connection))
+        {
+            con.Open();
+            var query = "Use NEA select * from [PlayerAchievment Tbl] where PlayerID = @Player and AchievmentID =@Achievment";
+            using (SqlCommand command = new SqlCommand(query, con))
+            {
+                command.Parameters.AddWithValue("@Player", index);
+                command.Parameters.AddWithValue("@Achievment", achievmentID);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (!reader.HasRows)
+                    {//the query retruns null
+                        AddValue = true;
+                    }
+                }
+            }
+            if (AddValue)
+            //if its not achieved add the achievment
+            {
+                var query2 = "use NEA insert into [PlayerAchievment Tbl] (PlayerID,AchievmentID,DateObtained) values (@Player,@Achievment,@DateObtained);";
+                using (SqlCommand command = new(query2, con))
+                {
+                    var date = DateTime.Now.Date; //remove the prefix of time from it
+                    command.Parameters.AddWithValue("@Player", index);
+                    command.Parameters.AddWithValue("@Achievment", achievmentID);
+                    command.Parameters.AddWithValue("@DateObtained", date);
+                    command.ExecuteNonQuery();
+                }
+            }
+            con.Close();
+        }
+    }
+    public static bool CheckPassword(int index, string password)
+    {
+        bool PasswordMatch = false;
+        using (SqlConnection con = new(connection)){
+            var Query = "select * from [Player Tbl] where PlayerID = @Player and Password = @Password";
+            con.Open();
+            using (SqlCommand command = new(Query,con)){
+                command.Parameters.AddWithValue("@PlayerID",index);
+                command.Parameters.AddWithValue("@Password",password);
+                using SqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows){
+                    PasswordMatch = true;
+                }
+            }
+            con.Close();
+        }
+        return PasswordMatch;
     }
 }

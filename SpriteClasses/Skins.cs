@@ -4,7 +4,6 @@ namespace _Sprites
 {
     class Skin
     {
-        private readonly Sql Query = new();
 
         public string BaseSkin { get; private set; }
         public string FlyingSkin { get; private set; }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using GameLogic;
+using Serilog;
 
 namespace NEAScreen;
 class SetttingsHomeScreen : IScreen

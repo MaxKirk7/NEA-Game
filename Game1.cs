@@ -78,10 +78,8 @@ namespace NEAGame
             var delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000F;
             screens.Update(delta);
             MediaPlayer.IsMuted = IsMuted;
-            if (screens.IsScreenOver())
+            if (screens.IsScreenOver() || LogIn)
             {
-                //UnloadContent();
-                Log.Information($"{screens.currentScreen()}: Screen Over");
                 var currentScreenType = screens.currentScreen().GetType();
 
                 // Determine the next screen type based on your game logic
@@ -117,7 +115,7 @@ namespace NEAGame
                     MediaPlayer.Volume = 0.6F;
                     MediaPlayer.IsRepeating = true;
                     MediaPlayer.Play(GameMusic);
-                    file=Logic.PullFile();
+                    file = Logic.PullFile();
                     if (!bool.Parse(file[3].Split(",")[1]))
                     {
                         MediaPlayer.IsMuted = true;
@@ -148,7 +146,6 @@ namespace NEAGame
                 }
                 else
                 {
-
                     return typeof(LoginScreen); // if any errors
                 }
             }

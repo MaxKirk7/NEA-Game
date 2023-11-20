@@ -91,7 +91,7 @@ class HomeScreen : IScreen
     public bool EndScreen()
     {
         var Over = ScreenOver;
-        if (ScreenOver)
+        if (ScreenOver || Game1.LogIn)
         {
             ScreenOver = false;
             ActiveSkin = MainHomeScreen.GetActiveSkin();

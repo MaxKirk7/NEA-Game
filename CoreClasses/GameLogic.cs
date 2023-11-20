@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
+using System.Numerics;
+using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using SQLQuery;
 
@@ -12,7 +15,7 @@ namespace GameLogic
         public static List<string> PullFile()
         {
             //open or create the file and then read from it
-            using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate, FileAccess.Read, FileShare.None))
+            using (FileStream stream = new("SavedInfo.txt", FileMode.OpenOrCreate, FileAccess.Read))
             {
                 using (StreamReader reader = new(stream))
                 {
@@ -96,6 +99,42 @@ namespace GameLogic
         public static void AuthenticateMachine(string PlayerID)
         {
             Sql.AddDevice(GetMACAddress().ToString(), PlayerID);
+        }
+        private static string GetHashValue(string input)
+        {
+            var InputToBytes = System.Text.Encoding.UTF8.GetBytes(input);
+            var InputToHash = SHA256.HashData(InputToBytes);
+            var HexValue = Convert.ToHexString(InputToHash);
+            return HexValue;
+        }
+        public static (bool, int) CreateNewUser(string username, string password, string email)
+        {
+            var result = (false, -1);
+            var PotentialIndex = BigInteger.Parse(GetHashValue(username), System.Globalization.NumberStyles.HexNumber);
+            PotentialIndex %= 1000; // index within 1000
+            if (PotentialIndex < 0) { PotentialIndex *= -1; }
+            var data = Sql.CheckForPlayerID((int)PotentialIndex, username);
+            result.Item2 = data.Item2;
+            if (!data.Item1)
+            {
+                Sql.CreateAccount(data.Item2, username, password, email);
+                result.Item1 = true;
+            }
+            return result;
+        }
+        public static (bool, int) FindUser(string username, string password)
+        {
+            var PotentialIndex = BigInteger.Parse(GetHashValue(username), System.Globalization.NumberStyles.HexNumber);
+            PotentialIndex %= 1000; // index within 1000
+            if (PotentialIndex < 0) { PotentialIndex *= -1; }
+            var data = Sql.CheckForPlayerID((int)PotentialIndex, username); // states whether account was found and the index at which it was found
+            //check the passwords match
+            if (data.Item1)
+            {
+                data.Item1 = Sql.CheckPassword(data.Item2, password);
+            }
+            else{data.Item1 = false;}
+            return data;
         }
     }
 }

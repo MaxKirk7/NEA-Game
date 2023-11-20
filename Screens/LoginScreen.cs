@@ -98,56 +98,35 @@ namespace NEAScreen
                 Password.Update(delta);
                 if (Enter.ButtonPressed())
                 {
-
                     if (IsValidInput())
                     {
-                        var result = Sql.PlayerIDQuery(Username.GetInput(), Password.GetInput()).ToString();
                         if (SignIn.ButtonPressed())
                         {
+                            var result = Logic.FindUser(Username.GetInput(), Password.GetInput()); // find the PlayerID spot or if it exists
                             // Handle sign-in logic
-                            if (result == "null")
+                            if (!result.Item1)
                             {
                                 Username.ChangeText("Invalid Username Or password");
                                 Password.ChangeText("Re-Enter Details");
                             }
                             else
                             {
-                                // Handle successful sign-in logic
-                                if (SavedFile.Count == 0)
-                                {
-                                    SavedFile.Add($"PlayerID,{result}");
-                                }
-                                else
-                                {
-                                    SavedFile[0] = $"PlayerID,{result}";
-                                }
+                                //store player ID
+                                SavedFile[0] = $"PlayerID,{result.Item2}";
                                 ScreenOver = true;
                             }
                         }
                         else if (SigningUp)
                         {
-                            // Handle sign-up logic
-                            if (result == "null")
+                            var NewAccount = Logic.CreateNewUser(Username.GetInput(), Password.GetInput(), Email.GetInput());
+                            if (NewAccount.Item1) // if the account details are new
                             {
-                                //log error here
-                                var NewAccount = Sql.CreateAccount(Username.GetInput(), Password.GetInput(), Email.GetInput());
-                                //end error
-                                if (NewAccount) // if the account details are new
-                                {
-                                    string PlayerID = Sql.PlayerIDQuery(Username.GetInput(), Password.GetInput());
-                                    SavedFile[0] = $"PlayerID,{PlayerID}";
-                                    Sql.AddAchievment(PlayerID, "1");
-                                    ScreenOver = true;
-                                }
-                                else
-                                {
-                                    Username.ChangeText("Username May already Exists");
-                                    Email.ChangeText("Email May already Exist");
-                                }
+                                SavedFile[0] = $"PlayerID,{NewAccount.Item2}";
+                                ScreenOver = true;
                             }
                             else
                             {
-                                Username.ChangeText("Username already Exists");
+                                Username.ChangeText("Username Already Exists");
                             }
                         }
                     }

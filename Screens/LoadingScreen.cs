@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using SQLQuery;
 using GameLogic;
-using Microsoft.IdentityModel.Tokens;
 
 namespace NEAScreen
 {
@@ -27,6 +26,7 @@ namespace NEAScreen
             Title = new TextBox("Fonts/TitleFont", "Salam Armada", con, sp, Game1.ScreenWidth / 2, 150, new Color(212, 152, 177), 3.5);
             LoadingSound = con.Load<Song>("LoadingScreen/Sounds/IntroSong");
             MediaPlayer.Volume = 1F;
+            MediaPlayer.Play(LoadingSound);
         }
         public void Draw(SpriteBatch sp)
         //spinning animation as the game loads

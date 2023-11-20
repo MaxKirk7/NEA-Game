@@ -17,7 +17,6 @@ class MainHomeScreen : IScreen
     //Skins need to be loaded from database
     private static bool LeaderBoardSelected = false;
     private static bool SettingsSelected = false;
-    private readonly Sql Query = new();
     private static readonly List<Skin> AvailableSkins = new();
     private List<string> SavedFile;
     private Sprite CurrentSkin;

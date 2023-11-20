@@ -179,11 +179,11 @@ class MainGame : IScreen
                 Sql.UpdateScore(SavedFile, CurrentScore);
                 if (CurrentScore > 1000)
                 {
-                    var PlayerID = SavedFile[0].Replace("PlayerID,", "");
-                    Sql.AddAchievment(PlayerID, "2");
+                    var PlayerID = int.Parse(SavedFile[0].Replace("PlayerID,", ""));
+                    Sql.AddAchievment(PlayerID, 2);
                     if (CurrentScore > 100000)
                     {
-                        Sql.AddAchievment(PlayerID, "3");
+                        Sql.AddAchievment(PlayerID, 3);
                     }
                 }
                 if (PlayAgain.ButtonPressed())
