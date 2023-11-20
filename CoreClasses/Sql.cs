@@ -9,14 +9,14 @@ using Serilog;
 namespace SQLQuery;
 class Sql
 {
-    private static string connection = "Data Source=MAX\\SQLEXPRESS,1433;Initial Catalog=NEA;User Id=NEAGame;Password=Chelsea_1;Encrypt = False;";
+    private static string connection = "Data Source=MAX\\SQLEXPRESS,1433;Initial Catalog=NEA;User Id=NEAGame;Password=Chelsea_1;Encrypt = True;TrustServerCertificate=true;";
     public static bool HasReset { get; private set; }
     public static bool IsVerified { get; private set; }
     private const int IndexJump = 3;
     public static List<int> GetAvailableSkin(string PlayerID)
     {
         List<int> AchievementIDs = new List<int>();
-        var t = Int32.TryParse(PlayerID, out var PID);
+        var PID = int.Parse(PlayerID);
 
         using (SqlConnection con = new SqlConnection(connection))
         {
@@ -461,7 +461,7 @@ class Sql
             var Query = "select * from [Player Tbl] where PlayerID = @Player and Password = @Password";
             con.Open();
             using (SqlCommand command = new(Query,con)){
-                command.Parameters.AddWithValue("@PlayerID",index);
+                command.Parameters.AddWithValue("@Player",index);
                 command.Parameters.AddWithValue("@Password",password);
                 using SqlDataReader reader = command.ExecuteReader();
                 if (reader.HasRows){
