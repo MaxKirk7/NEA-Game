@@ -113,6 +113,7 @@ namespace GameLogic
             var PotentialIndex = BigInteger.Parse(GetHashValue(username), System.Globalization.NumberStyles.HexNumber);
             PotentialIndex %= 1000; // index within 1000
             if (PotentialIndex < 0) { PotentialIndex *= -1; }
+            else if (PotentialIndex == 0) { PotentialIndex = 1000; }
             var data = Sql.CheckForPlayerID((int)PotentialIndex, username);
             result.Item2 = data.Item2;
             if (!data.Item1)
@@ -127,13 +128,14 @@ namespace GameLogic
             var PotentialIndex = BigInteger.Parse(GetHashValue(username), System.Globalization.NumberStyles.HexNumber);
             PotentialIndex %= 1000; // index within 1000
             if (PotentialIndex < 0) { PotentialIndex *= -1; }
+            else if (PotentialIndex == 0) { PotentialIndex = 1000; }
             var data = Sql.CheckForPlayerID((int)PotentialIndex, username); // states whether account was found and the index at which it was found
             //check the passwords match
             if (data.Item1)
             {
                 data.Item1 = Sql.CheckPassword(data.Item2, password);
             }
-            else{data.Item1 = false;}
+            else { data.Item1 = false; }
             return data;
         }
     }
