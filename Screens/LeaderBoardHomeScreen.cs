@@ -22,31 +22,32 @@ class LeaderBoardHomeScreen : IScreen
     {
         HighScores.Clear();
         Scores.Clear();
-        Scores = Sql.HighScores(SavedFile[0].Replace("PlayerID,",""));
+        Scores = Sql.HighScores(SavedFile[0].Replace("PlayerID,", ""));
         LeaderBoardBackGround = new(new Color(10, 20, 5, 180), con, sp, 500, 500, Game1.ScreenWidth / 2, Game1.ScreenHeight / 2);
         Back = new("Fonts/TitleFont", "Back", con, sp, 100, 980, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
         var Ypos = 320;
-            for (int i = 0; i < Scores.Count; i++)
+        var TextGap = 20;
+        for (int i = 0; i < Scores.Count; i++)
+        {
+            if (i == 0)
             {
-                if (i == 0)
-                {
-                    HighScores.Add(new TextBox("Fonts/TitleFont", "High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
-                    Ypos += 60;
-                }
-                if (i == 5)
-                {
-                    Ypos += 60;
-                    HighScores.Add(new TextBox("Fonts/TitleFont", "Personal High:", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
-                }
-                if (Scores[i] != null)
-                {
-                    HighScores.Add(new TextBox("Fonts/TitleFont", i + 1 + ": " + Scores[i][0] + "......" + Scores[i][1], con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 1.5));
-                }
-                if (i == 1)
-                {
-                    Ypos += 60;
-                    HighScores.Add(new TextBox("Fonts/TitleFont", "Weekly High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * 30, Color.LightCyan, 2));
-                }
+                HighScores.Add(new TextBox("Fonts/TitleFont", "High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * TextGap, Color.LightCyan, 2));
+                Ypos += 60;
+            }
+            else if (i == 5)
+            {
+                Ypos += 60;
+                HighScores.Add(new TextBox("Fonts/TitleFont", "Personal High:", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * TextGap, Color.LightCyan, 2));
+            }
+            else if (i == 1)
+            {
+                Ypos += 60;
+                HighScores.Add(new TextBox("Fonts/TitleFont", "Weekly High Scores :", con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * TextGap, Color.LightCyan, 2));
+            }
+            if (Scores[i].Count > 1)
+            {
+                HighScores.Add(new TextBox("Fonts/TitleFont", i + 1 + ": " + Scores[i][0] + "......" + Scores[i][1], con, sp, Game1.ScreenWidth / 2 + 2, Ypos + i * TextGap, Color.LightCyan, 1.5));
+            }
         }
     }
 

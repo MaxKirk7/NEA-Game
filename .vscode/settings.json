@@ -1,3 +1,5 @@
 {
-    "dotnet.defaultSolution": "NEAGame.sln"
+    "dotnet.defaultSolution": "NEAGame.sln",
+    "editor.tabSize": 2,
+    "files.autoSave": "onFocusChange"
 }

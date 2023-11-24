@@ -1,10 +1,8 @@
 using _Sprites;
 using NEAGame;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Serilog;
 using GameLogic;
 using System;
 

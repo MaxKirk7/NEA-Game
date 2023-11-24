@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using GameLogic;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Xna.Framework;
@@ -18,6 +17,7 @@ namespace NEAGame
         //by using dictionary screens are only generated when needed/ used
         private readonly Dictionary<Type, Lazy<IScreen>> MainScreens = new Dictionary<Type, Lazy<IScreen>>(){
             {typeof(LoadingScreen),new Lazy<IScreen>(() => new LoadingScreen())},
+            {typeof(ChangePassword),new Lazy<IScreen>(() => new ChangePassword())},
             {typeof(HomeScreen),new Lazy<IScreen>(() => new HomeScreen())},
             {typeof(LoginScreen),new Lazy<IScreen>(() => new LoginScreen())},
             {typeof(MainGame),new Lazy<IScreen>(() => new MainGame())}
@@ -94,7 +94,6 @@ namespace NEAGame
                     Exit();
                 }
             }
-
             // TODO: Add your update logic here
             Content = Con;
             base.Update(gameTime);
@@ -128,7 +127,18 @@ namespace NEAGame
                 }
                 else if (current == typeof(LoginScreen))
                 {
-                    return typeof(HomeScreen);
+                    if (LoginScreen.ForgotPassword())
+                    {
+                        return typeof(ChangePassword);
+                    }
+                    else
+                    {
+                        return typeof(HomeScreen);
+                    }
+                }
+                else if (current == typeof(ChangePassword))
+                {
+                    return typeof(LoginScreen);
                 }
                 else if (current == typeof(HomeScreen))
                 {

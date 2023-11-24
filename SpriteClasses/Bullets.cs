@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using NEAScreen;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using NEAGame;
-using Microsoft.IdentityModel.Tokens;
 
 namespace NEAGameObjects
 {

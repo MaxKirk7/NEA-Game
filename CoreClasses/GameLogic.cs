@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Numerics;
-using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using SQLQuery;
@@ -137,6 +136,19 @@ namespace GameLogic
             }
             else { data.Item1 = false; }
             return data;
+        }
+        public static bool UpdatePassword(string username, string password, string email)
+        {
+            var PotentialIndex = BigInteger.Parse(GetHashValue(username), System.Globalization.NumberStyles.HexNumber);
+            PotentialIndex %= 1000; // index within 1000
+            if (PotentialIndex < 0) { PotentialIndex *= -1; }
+            else if (PotentialIndex == 0) { PotentialIndex = 1000; }
+            var data = Sql.CheckForPlayerID((int)PotentialIndex, username);
+            if (data.Item1)
+            {
+                data.Item1 = Sql.ChangePassword(data.Item2, username, email, password);
+            }
+            return data.Item1;
         }
     }
 }

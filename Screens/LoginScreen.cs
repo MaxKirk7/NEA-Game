@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using _Sprites;
 using NEAGame;
 using SQLQuery;
@@ -13,6 +12,7 @@ namespace NEAScreen
 {
     class LoginScreen : IScreen
     {
+        private static bool HasForgotPassword = false;
         private bool FirstLoop;
         private bool NewScreen = false;
         private bool ScreenOver = false;
@@ -30,11 +30,13 @@ namespace NEAScreen
         private BlankBox EmailBox;
         private InputBox Email;
         private Button Back;
+        private Button ButtonForgotPassword;
         private bool SigningUp = false;
         private List<string> SavedFile = new();
 
         public void LoadContent(ContentManager con, SpriteBatch sp)
         {
+            HasForgotPassword = false;
             SavedFile.Clear();
             SavedFile = Logic.PullFile();
             if (SavedFile.Count > 0 && !String.IsNullOrWhiteSpace(SavedFile[0].Split(",")[1]) && Sql.IsVerified)
@@ -56,7 +58,8 @@ namespace NEAScreen
                 EmailBox = new BlankBox(Color.Coral, con, sp, 300, 100, Game1.ScreenWidth / 2, 350);
                 //other buttons
                 Back = new Button("Fonts/TitleFont", "Back", con, sp, 100, 980, Color.Black, 1.3, 100, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
-                SignIn = new Button("Fonts/TitleFont", "Log In", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+                ButtonForgotPassword = new Button("Fonts/TitleFont", "ForgotPassword", con, sp, Game1.ScreenWidth - 100, 980, Color.Black, 1.3, 150, 75, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
+                SignIn = new Button("Fonts/TitleFont", "Log In", con, sp, Game1.ScreenWidth / 3, Game1.ScreenHeight / 2, Color.Black, 2, 300, 175, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
                 SignUp = new Button("Fonts/TitleFont", "Sign Up", con, sp, Game1.ScreenWidth / 3 * 2, Game1.ScreenHeight / 2, Color.Black, 2, 300, 150, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
                 Enter = new Button("Fonts/TitleFont", "Enter", con, sp, Game1.ScreenWidth / 2, (int)((Game1.ScreenHeight / 3) * 2.25), Color.Black, 2, 300, 100, new Color(50, 80, 12), Color.BlueViolet, "Buttons/Rounded Square Button");
             }
@@ -66,12 +69,13 @@ namespace NEAScreen
                 SignUp.AddButton();
             }
             FirstLoop = true;
-            Username = new InputBox("Fonts/TitleFont", "Enter Your Username...", con, sp, Game1.ScreenWidth / 2, 500, Color.Black, 1, 300, 100, 15);
-            Password = new InputBox("Fonts/TitleFont", "Enter Your Password...", con, sp, Game1.ScreenWidth / 2, 650, Color.Black, 1, 300, 100, 25);
-            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2 - 50, 350, Color.Black, 0.8, 300, 100, 50);
+            Username = new InputBox("Fonts/TitleFont", "Enter Your Username...", con, sp, Game1.ScreenWidth / 2, 500, Color.Black, 0.8, 100, 100, 15);
+            Password = new InputBox("Fonts/TitleFont", "Enter Your Password...", con, sp, Game1.ScreenWidth / 2, 650, Color.Black, 0.8, 100, 100, 25);
+            Email = new InputBox("Fonts/TitleFont", "Enter Your Email...", con, sp, Game1.ScreenWidth / 2 , 350, Color.Black, 0.8, 100, 100, 50);
             //hide Enter Button as the game starts
             Enter.RemoveButton();
             Back.RemoveButton();
+            ButtonForgotPassword.RemoveButton();
             NewScreen = false;
 
         }
@@ -93,6 +97,7 @@ namespace NEAScreen
                     Enter.AddButton();
                     Back.AddButton();
                     FirstLoop = false;
+                    ButtonForgotPassword.AddButton();
                 }
                 Username.Update(delta);
                 Password.Update(delta);
@@ -134,9 +139,16 @@ namespace NEAScreen
             }
             if (Back.ButtonPressed())
             {
+                ButtonForgotPassword.RemoveButton();
                 Back.ManualUnpress();
                 ScreenOver = true;
                 Game1.LogIn = true;
+            }
+            if (ButtonForgotPassword.ButtonPressed())
+            {
+                ButtonForgotPassword.ManualUnpress();
+                ScreenOver = true;
+                HasForgotPassword = true;
             }
         }
 
@@ -208,9 +220,11 @@ namespace NEAScreen
                     valid = false;
                 }
             }
-
             return valid;
         }
-
+        public static bool ForgotPassword()
+        {
+            return HasForgotPassword;
+        }
     }
 }

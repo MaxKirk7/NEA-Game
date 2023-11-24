@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using System.ComponentModel.Design;
 using Azure.Core.Pipeline;
 using Microsoft.Data.SqlClient;
-using Serilog;
 namespace SQLQuery;
 class Sql
 {
@@ -66,146 +63,127 @@ class Sql
     }
     public static List<List<string>> HighScores(string PlayerID)
     {
-        var PID = Int32.Parse(PlayerID);
+        var Index = Int32.Parse(PlayerID);
         List<List<string>> Scores = new(6) { };
-        var HighScoreQuery = "use NEA select top 3 HighScore, NickName from [Player Info Tbl] where HighScore is not null order by HighScore DESC;";
         using (SqlConnection con = new SqlConnection(connection))
         {
             con.Open();
-            using (SqlCommand command = new(HighScoreQuery, con))
+            using (SqlTransaction transaction = con.BeginTransaction())
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                var HighScoreQuery = "use NEA select top 3 HighScore, NickName from [Player Info Tbl] where HighScore is not null order by HighScore DESC;";
+                using (SqlCommand HighScoreCommand = new(HighScoreQuery, con, transaction))
                 {
-                    if (reader.HasRows)
+                    using (SqlDataReader reader = HighScoreCommand.ExecuteReader())
                     {
-                        while (reader.Read())
+                        for (int i = 0; i < 3; i++)
                         {
-                            List<string> tempscore = new() { };
-                            string HighScore = reader["HighScore"].ToString();
-                            string NickName = reader["NickName"].ToString();
-                            tempscore.Add(NickName);
-                            tempscore.Add(HighScore);
+                            var tempscore = new List<string>(2);
+                            if (reader.Read())
+                            {
+                                tempscore.Add(reader["HighScore"].ToString());
+                                tempscore.Add(reader["NickName"].ToString());
+                            }
+                            else
+                            {
+                                tempscore.Add(null);
+                            }
                             Scores.Add(tempscore);
                         }
                     }
                 }
-            }
-            con.Close();
-        }
-        //make sure the list has full amount of values
-        if (Scores.Count < 3)
-        {
-            for (int i = Scores.Count - 1; i < 3; i++)
-            {
-                Scores.Add(null);
-            }
-        }
-        //weekly scores
-        var WeeklyQuery = "USE NEA; SELECT TOP 2 WeeklyHighScore, Nickname FROM [Player Info Tbl] WHERE WeeklyHighScore IS NOT NULL ORDER BY WeeklyHighScore DESC;";
-
-        using (SqlConnection con = new(connection))
-        {
-            con.Open();
-            using (SqlCommand command = new(WeeklyQuery, con))
-            {
-                using (SqlDataReader reader = command.ExecuteReader())
+                var WeeklyQuery = "USE NEA; SELECT TOP 2 WeeklyHighScore, NickName FROM [Player Info Tbl] WHERE WeeklyHighScore IS NOT NULL ORDER BY WeeklyHighScore DESC;";
+                using (SqlCommand WeeklyCommand = new(WeeklyQuery, con, transaction))
                 {
-                    if (reader.HasRows)
+                    using (SqlDataReader reader = WeeklyCommand.ExecuteReader())
                     {
-                        while (reader.Read())
+                        for (int i = 0; i < 2; i++)
                         {
-                            List<string> tempscore = new() { };
-                            string Weekly = reader["WeeklyHighScore"].ToString();
-                            string NickName = reader["NickName"].ToString();
-                            tempscore.Add(NickName);
-                            tempscore.Add(Weekly);
+                            var tempscore = new List<string>(2);
+                            if (reader.Read())
+                            {
+                                tempscore.Add(reader["WeeklyHighScore"].ToString());
+                                tempscore.Add(reader["NickName"].ToString());
+                            }
+                            else { tempscore.Add(null); }
                             Scores.Add(tempscore);
                         }
                     }
                 }
-            }
-            con.Close();
-        }
-        if (Scores.Count < 5)
-        {
-            for (int i = Scores.Count - 1; i < 5; i++)
-            {
-                Scores.Add(null);
-            }
-        }
-        var Personal = "USE NEA; SELECT HighScore, Nickname FROM [Player Info Tbl] WHERE PlayerID = @PlayerID AND HighScore IS NOT NULL;";
-        using (SqlConnection con = new(connection))
-        {
-            con.Open();
-            using (SqlCommand command = new(Personal, con))
-            {
-                command.Parameters.AddWithValue("@PlayerID", PID);
-                using (SqlDataReader reader = command.ExecuteReader())
+                var Personal = "SELECT HighScore, NickName FROM [Player Info Tbl] WHERE PlayerID = @PlayerID AND HighScore IS NOT NULL;";
+                using (SqlCommand PersonalCommand = new(Personal, con, transaction))
                 {
-                    if (reader.HasRows)
+                    PersonalCommand.Parameters.AddWithValue("@PlayerID", Index);
+                    using (SqlDataReader reader = PersonalCommand.ExecuteReader())
                     {
-                        while (reader.Read())
+                        var tempscore = new List<string>();
+                        if (reader.Read())
                         {
-                            List<string> tempscore = new() { };
-                            string HighScore = reader["HighScore"].ToString();
-                            string NickName = reader["NickName"].ToString();
-                            tempscore.Add(NickName);
-                            tempscore.Add(HighScore);
-                            Scores.Add(tempscore);
+                            tempscore.Add(reader["HighScore"].ToString());
+                            tempscore.Add(reader["NickName"].ToString());
                         }
+                        else { tempscore.Add(null); }
+                        Scores.Add(tempscore);
                     }
                 }
+                transaction.Commit();
             }
             con.Close();
-        }
-        if (Scores.Count < 6)
-        {
-            Scores.Add(null);
         }
         return Scores;
     }
     public static int UpdateScore(List<string> file, int LastScore)
     {
         double AverageScore = 0;
-        var PID = int.Parse(file[0].Replace("PlayerID,", ""));
+        var Index = int.Parse(file[0].Replace("PlayerID,", ""));
         int GamesPlayed = int.Parse(file[2].Replace("GamesPlayed,", ""));
         //get the last average score 
         using (SqlConnection con = new(connection))
         {
-            var query = "use NEA select AverageScore from [Player Info Tbl] where PlayerID = @PlayerID and AverageScore is not null";
             con.Open();
-            using (SqlCommand command = new(query, con))
+            using (SqlTransaction transaction = con.BeginTransaction())
             {
-                command.Parameters.AddWithValue("@PlayerID", PID);
-                using (SqlDataReader reader = command.ExecuteReader())
+                var AverageScoreQuery = "use NEA select AverageScore from [Player Info Tbl] where PlayerID = @PlayerID and AverageScore is not null";
+                using (SqlCommand AverageScoreCommand = new(AverageScoreQuery, con, transaction))
                 {
-                    if (reader.HasRows && reader.Read())
+                    AverageScoreCommand.Parameters.AddWithValue("@PlayerID", Index);
+                    using (SqlDataReader reader = AverageScoreCommand.ExecuteReader())
                     {
-                        AverageScore = reader.GetDouble(0);
+                        if (reader.Read())
+                        {
+                            AverageScore = reader.GetDouble(0);
+                        }
                     }
                 }
-            }
-            //update the average score
-            var UpdateQuery = "use NEA update [Player Info Tbl] set AverageScore = @Score where PlayerID = @PlayerID";
-            using (SqlCommand AverageScoreUpdate = new SqlCommand(UpdateQuery, con))
-            {
-                // calcualte new average score
-                AverageScore = (AverageScore * (GamesPlayed - 1) + LastScore) / GamesPlayed;
-                AverageScoreUpdate.Parameters.AddWithValue("@Score", AverageScore);
-                AverageScoreUpdate.Parameters.AddWithValue("@PlayerID", PID);
-                AverageScoreUpdate.ExecuteNonQuery();
-            }
-            //update the MaxScore
-            var UpdateHighScore = "Use NEA update [Player Info Tbl] set HighScore = @Score where PlayerID = @PlayerID and (HighScore < @Score or HighScore is null)";
-            using (SqlCommand HighScoreCommand = new(UpdateHighScore, con))
-            {
-                HighScoreCommand.Parameters.AddWithValue("@Score", LastScore);
-                HighScoreCommand.Parameters.AddWithValue("@PlayerID", PID);
-                HighScoreCommand.ExecuteNonQuery();
+                //update the average score
+                var AverageUpdateQuery = "update [Player Info Tbl] set AverageScore = @Score where PlayerID = @PlayerID";
+                using (SqlCommand AverageScoreUpdate = new(AverageUpdateQuery, con, transaction))
+                {
+                    // calcualte new average score
+                    AverageScore = (AverageScore * (GamesPlayed - 1) + LastScore) / GamesPlayed;
+                    AverageScoreUpdate.Parameters.AddWithValue("@Score", AverageScore);
+                    AverageScoreUpdate.Parameters.AddWithValue("@PlayerID", Index);
+                    AverageScoreUpdate.ExecuteNonQuery();
+                }
+                //update the MaxScore
+                var UpdateHighScoreQuery = "update [Player Info Tbl] set HighScore = @Score where PlayerID = @PlayerID and (HighScore < @Score or HighScore is null)";
+                using (SqlCommand HighScoreUpdateCommand = new(UpdateHighScoreQuery, con, transaction))
+                {
+                    HighScoreUpdateCommand.Parameters.AddWithValue("@Score", LastScore);
+                    HighScoreUpdateCommand.Parameters.AddWithValue("@PlayerID", Index);
+                    HighScoreUpdateCommand.ExecuteNonQuery();
+                }
+                var UpdateWeeklyScoreQuery = "update [Player Info Tbl] set WeeklyHighScore = @Score where PlayerID = @PlayerID and (WeeklyHighScore < @Score or WeeklyHighScore is null)";
+                using (SqlCommand WeeklyScoreUpdateCommand = new(UpdateWeeklyScoreQuery, con, transaction))
+                {
+                    WeeklyScoreUpdateCommand.Parameters.AddWithValue("@Score", LastScore);
+                    WeeklyScoreUpdateCommand.Parameters.AddWithValue("@PlayerID", Index);
+                    WeeklyScoreUpdateCommand.ExecuteNonQuery();
+                }
+                transaction.Commit();
             }
             con.Close();
         }
-        return GetAverageScore(PID.ToString());
+        return GetAverageScore(Index.ToString());
     }
     public static int GetAverageScore(string PlayerID)
     {
@@ -457,19 +435,58 @@ class Sql
     public static bool CheckPassword(int index, string password)
     {
         bool PasswordMatch = false;
-        using (SqlConnection con = new(connection)){
+        using (SqlConnection con = new(connection))
+        {
             var Query = "select * from [Player Tbl] where PlayerID = @Player and Password = @Password";
             con.Open();
-            using (SqlCommand command = new(Query,con)){
-                command.Parameters.AddWithValue("@Player",index);
-                command.Parameters.AddWithValue("@Password",password);
+            using (SqlCommand command = new(Query, con))
+            {
+                command.Parameters.AddWithValue("@Player", index);
+                command.Parameters.AddWithValue("@Password", password);
                 using SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows){
+                if (reader.HasRows)
+                {
                     PasswordMatch = true;
                 }
             }
             con.Close();
         }
         return PasswordMatch;
+    }
+    public static bool ChangePassword(int index, string username, string email, string password)
+    {
+        bool success = false;
+        using (SqlConnection con = new(connection))
+        {
+            con.Open();
+            using (SqlTransaction transaction = con.BeginTransaction())
+            {
+                var CheckPassword = "Select Email from [Player Info Tbl] where PlayerID = @Player";
+                using (SqlCommand CheckPasswordCommand = new(CheckPassword, con, transaction))
+                {
+                    CheckPasswordCommand.Parameters.AddWithValue("@Player", index);
+                    using (SqlDataReader reader = CheckPasswordCommand.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            success = reader.GetString(0) == email;
+                        }
+                    }
+                }
+                if (success)
+                {
+                    var UpdatePasswordQuery = "Update [Player Tbl] set Password = @Pass where PlayerID = @Player";
+                    using (SqlCommand UpdatePassword = new(UpdatePasswordQuery, con, transaction))
+                    {
+                        UpdatePassword.Parameters.AddWithValue("@Pass", password);
+                        UpdatePassword.Parameters.AddWithValue("@Player",index);
+                        UpdatePassword.ExecuteNonQuery();
+                    }
+                }
+                transaction.Commit();
+            }
+            con.Close();
+        }
+        return success;
     }
 }
